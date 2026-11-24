@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Séance 4 — Finaliser et transmettre · Théorie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eceef2;--tile:#ffffff;--text:#16181d;--muted:#4a505c;--line:#e3e6ec;--soft:#f6f7f9;
+  --accent:#2563eb;--accent-dark:#1d4ed8;
+  --blue:#e8efff;--peach:#ffeede;--mint:#e2f6ea;--lilac:#f1e8ff;--rose:#ffe8e6;
+  --green:#15803d;--red:#b91c1c;--amber:#b45309;
+  --r:28px;--gap:16px;
+  --sans:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;min-height:100vh}
+code,.mono{font-family:var(--mono)}
+code{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.84em}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--accent-dark)}
+:focus-visible{outline:3px solid var(--accent-dark);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding:24px 16px 0}
+
+/* En-tête */
+.hero{background:var(--tile);border-radius:var(--r);padding:34px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:6px 14px;border-radius:999px;font-size:.78rem;font-weight:700;letter-spacing:.02em;margin-bottom:14px}
+.hero h1{font-size:clamp(1.7rem,3.8vw,2.6rem);font-weight:800;line-height:1.15;margin-bottom:10px}
+.hero .subtitle{color:var(--muted);max-width:820px;font-size:1.05rem}
+.meta-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.meta-pill{padding:6px 12px;border-radius:999px;font-size:.82rem;font-weight:600}
+.meta-pill:nth-child(5n+1){background:var(--blue)}.meta-pill:nth-child(5n+2){background:var(--peach)}.meta-pill:nth-child(5n+3){background:var(--mint)}.meta-pill:nth-child(5n+4){background:var(--lilac)}.meta-pill:nth-child(5n+5){background:var(--rose)}
+.global-progress{margin-top:20px;max-width:520px}
+.global-progress .label{display:flex;justify-content:space-between;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:6px}
+.track,.progress-track{height:12px;background:var(--line);border-radius:999px;overflow:hidden}
+.fill,.progress-fill{height:100%;width:0;background:var(--green);border-radius:999px;transition:width .4s ease}
+.mode-flag{display:none;margin-top:14px;background:var(--amber);color:#fff;font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:999px;width:max-content}
+body.formateur .mode-flag{display:block}
+
+/* Onglets */
+.tabs-wrap{position:sticky;top:0;z-index:50;background:rgba(236,238,242,.94);backdrop-filter:blur(8px)}
+.tabs{max-width:1240px;margin:0 auto;display:flex;gap:8px;overflow-x:auto;padding:14px 16px;scrollbar-width:thin}
+.tab{border:none;background:var(--tile);padding:10px 16px;font-size:.88rem;font-weight:700;color:var(--text);white-space:nowrap;border-radius:999px;display:flex;align-items:center;gap:6px}
+.tab:hover{box-shadow:inset 0 0 0 2px var(--accent)}
+.tab.active{background:var(--accent);color:#fff}
+.tab .done-mark{display:none}
+.tab.done .done-mark{display:inline}
+
+main{max-width:1240px;margin:0 auto;padding:0 16px 60px}
+.panel{display:none}
+.panel.active{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap);animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.panel.active{animation:none}.fill,.progress-fill{transition:none}}
+
+/* Tuiles */
+.card{grid-column:span 4;background:var(--tile);border-radius:var(--r);padding:28px;min-width:0}
+.card.half{grid-column:span 2}.card.quarter{grid-column:span 1}.card.three{grid-column:span 3}
+.card.t-blue{background:var(--blue)}.card.t-peach{background:var(--peach)}.card.t-mint{background:var(--mint)}.card.t-lilac{background:var(--lilac)}.card.t-rose{background:var(--rose)}
+.card.slim{padding:14px 24px}
+@media(max-width:900px){.panel.active{grid-template-columns:1fr}.card,.card.half,.card.quarter,.card.three{grid-column:span 1}.card{padding:22px 18px}.hero{padding:24px 20px}}
+.section-title{display:flex;align-items:center;gap:14px;font-size:1.25rem;font-weight:800;margin-bottom:16px;line-height:1.25}
+.icon-bg{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:1.25rem;flex-shrink:0;background:var(--blue)}
+.icon-bg.green{background:var(--mint)}.icon-bg.amber{background:var(--peach)}.icon-bg.purple{background:var(--lilac)}.icon-bg.red{background:var(--rose)}
+.card[class*="t-"] .icon-bg{background:#fff}
+h3{font-size:1.05rem;font-weight:800;margin:22px 0 10px}
+p{margin-bottom:10px}
+.lead{font-size:1.05rem}
+.muted{color:var(--muted);font-size:.9rem}
+ul.clean{list-style:none}
+ul.clean li{padding:5px 0 5px 24px;position:relative}
+ul.clean li::before{content:"▸";position:absolute;left:4px;color:var(--accent);font-weight:800}
+ol{padding-left:22px}ol li{padding:3px 0}
+
+/* Encadrés */
+.objectif-box,.instruction-box,.key-box,.warn-box{border-radius:20px;padding:18px 20px;margin:16px 0}
+.objectif-box{background:var(--blue)}
+.instruction-box{background:var(--peach)}
+.key-box{background:var(--lilac)}
+.warn-box{background:var(--rose)}
+.objectif-box strong.title,.instruction-box strong.title{display:block;margin-bottom:8px;font-weight:800}
+.key-box .big{font-size:1.15rem;font-weight:800}
+.card[class*="t-"] .objectif-box,.card[class*="t-"] .instruction-box,.card[class*="t-"] .key-box,.card[class*="t-"] .warn-box{background:#fff}
+.formateur-only{display:none}
+body.formateur .formateur-only{display:block}
+.trainer{background:var(--lilac);border-radius:20px;padding:14px 18px;margin:16px 0;font-size:.92rem}
+
+/* Grilles internes */
+.grid{display:grid;gap:14px}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.mini-card{border-radius:20px;padding:18px;background:var(--soft)}
+.card[class*="t-"] .mini-card{background:#fff}
+.mini-card h4{font-size:1rem;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mini-card.bad{background:var(--rose)}
+.mini-card.good{background:var(--mint)}
+.mini-card.c-blue{background:var(--blue)}.mini-card.c-peach{background:var(--peach)}.mini-card.c-mint{background:var(--mint)}.mini-card.c-lilac{background:var(--lilac)}.mini-card.c-rose{background:var(--rose)}
+.mini-card p:last-child{margin-bottom:0}
+
+.famille-tag{display:inline-block;font-size:.72rem;font-weight:800;padding:4px 10px;border-radius:999px;color:var(--text)}
+.f1{background:var(--blue)}.f2{background:var(--peach)}.f3{background:var(--rose)}.f4{background:var(--lilac)}.f5{background:var(--mint)}
+.card[class*="t-"] .famille-tag,.mini-card[class*="c-"] .famille-tag{box-shadow:inset 0 0 0 1.5px rgba(22,24,29,.15)}
+.media{display:inline-block;font-size:.74rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1.5px #c3c9d4;white-space:nowrap}
+
+.term-item{background:var(--lilac);color:var(--text);font-family:var(--mono);font-size:.84rem;font-weight:600;padding:8px 14px;border-radius:999px;display:inline-block}
+pre.prompt{background:var(--soft);color:var(--text);font-family:var(--mono);font-size:.84rem;padding:18px 20px;border-radius:20px;white-space:pre-wrap;word-break:break-word;line-height:1.65;overflow-x:auto;margin:12px 0}
+.card[class*="t-"] pre.prompt,.mini-card pre.prompt{background:#fff}
+pre.prompt .hl{color:var(--green);font-weight:700}
+pre.prompt .hl2{color:var(--amber);font-weight:700}
+pre.prompt .hl3{color:var(--accent-dark);font-weight:700}
+
+/* Boutons */
+.btn{border:none;border-radius:999px;padding:11px 18px;font-weight:700;font-size:.88rem;display:inline-flex;align-items:center;gap:8px;transition:transform .1s;text-decoration:none}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-dark)}
+.btn-success{background:var(--green);color:#fff}
+.btn-ghost{background:#fff;color:var(--text);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.btn-warning{background:var(--amber);color:#fff}
+.btn-sm{padding:7px 13px;font-size:.8rem}
+.actions-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;align-items:center}
+.btn-reveal{display:none}
+body.formateur .btn-reveal{display:inline-flex}
+.reveal-content{display:none}
+.reveal-content.shown{display:block}
+
+.progress-wrap{margin:16px 0 4px}
+.progress-label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:6px;font-weight:700}
+.result-panel{display:none;background:var(--blue);border-radius:24px;padding:22px 24px;margin-top:18px}
+.result-panel.show{display:block}
+.result-panel .score{font-size:2.8rem;font-weight:800;line-height:1.1;color:var(--accent-dark)}
+.result-panel .msg{margin-top:6px}
+
+/* Explorateur */
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0}
+.chain-node{border:none;box-shadow:inset 0 0 0 2px var(--line);background:#fff;border-radius:999px;padding:9px 16px;font-weight:700;font-size:.88rem;color:var(--text)}
+.chain-node:hover{box-shadow:inset 0 0 0 2px var(--accent)}
+.chain-node.active{background:var(--accent);color:#fff;box-shadow:none}
+.chain-node.seen:not(.active){box-shadow:inset 0 0 0 2px #93c5fd}
+.chain-arrow{color:var(--muted);font-weight:800}
+.concept-detail{border-radius:20px;padding:20px;background:var(--soft);min-height:170px}
+.concept-detail .row{display:grid;grid-template-columns:130px 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed #d3d8e0}
+.concept-detail .row:last-child{border-bottom:none}
+.concept-detail .k{font-weight:800;font-size:.82rem;color:var(--muted)}
+@media(max-width:600px){.concept-detail .row{grid-template-columns:1fr;gap:2px}}
+
+/* QCM */
+.qcm-q{border-radius:20px;padding:16px 18px;margin-bottom:12px;background:var(--soft);box-shadow:inset 0 0 0 2px transparent}
+.qcm-q .qt{font-weight:700;margin-bottom:10px}
+.qcm-opts{display:grid;gap:8px}
+.qcm-opt{display:flex;gap:10px;align-items:flex-start;border:none;box-shadow:inset 0 0 0 1.5px var(--line);border-radius:14px;padding:10px 12px;font-size:.92rem;background:#fff;text-align:left;width:100%;color:var(--text)}
+.qcm-opt:hover{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.qcm-opt .l{font-family:var(--mono);font-weight:700;color:var(--accent-dark);min-width:18px}
+.qcm-opt.sel{box-shadow:inset 0 0 0 2px var(--accent);background:var(--blue)}
+.qcm-q.checked .qcm-opt{cursor:default}
+.qcm-opt.good{box-shadow:inset 0 0 0 2px var(--green);background:var(--mint)}
+.qcm-opt.bad{box-shadow:inset 0 0 0 2px var(--red);background:var(--rose)}
+.qcm-q.correct{box-shadow:inset 0 0 0 2px var(--green)}
+.qcm-q.wrong{box-shadow:inset 0 0 0 2px var(--red)}
+.qcm-q .expl{display:none;margin-top:10px;font-size:.88rem;padding-top:8px;border-top:1px dashed #cfd5de}
+.qcm-q.checked .expl{display:block}
+.q-num{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-right:6px}
+
+/* Vrai / faux */
+.vf-row{padding:16px;border-radius:20px;margin-bottom:10px;background:var(--soft)}
+.vf-row .vf-q{font-weight:600;margin-bottom:10px}
+.vf-btns{display:flex;gap:8px}
+.vf-btn{border:none;box-shadow:inset 0 0 0 1.5px var(--line);background:#fff;border-radius:999px;padding:7px 18px;font-weight:700;font-size:.85rem;color:var(--text)}
+.vf-btn.sel{background:var(--text);color:#fff;box-shadow:none}
+.vf-row.correct{background:var(--mint)}
+.vf-row.wrong{background:var(--rose)}
+.vf-row .expl{display:none;margin-top:10px;font-size:.88rem}
+.vf-row.checked .expl{display:block}
+
+/* Cas 1 */
+.match-grid{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:16px;margin-top:10px}
+@media(max-width:760px){.match-grid{grid-template-columns:1fr}}
+.match-col{display:flex;flex-direction:column;gap:8px}
+.match-col h4{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.m-term{background:var(--lilac);color:var(--text);font-family:var(--mono);font-size:.84rem;font-weight:600;padding:10px 12px;border-radius:14px;border:none;box-shadow:inset 0 0 0 2px transparent;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.m-term:hover{box-shadow:inset 0 0 0 2px var(--accent)}
+.m-term.active{box-shadow:inset 0 0 0 3px var(--amber)}
+.m-def{background:#fff;border:none;box-shadow:inset 0 0 0 1.5px var(--line);border-radius:14px;padding:10px 12px;font-size:.88rem;text-align:left;display:flex;gap:10px;align-items:flex-start;color:var(--text)}
+.m-def:hover{box-shadow:inset 0 0 0 2px #93c5fd}
+.pair-badge{font-family:var(--mono);font-size:.72rem;font-weight:700;min-width:24px;height:24px;border-radius:8px;display:inline-grid;place-items:center;background:#fff;color:var(--muted);flex-shrink:0}
+.m-def .pair-badge{background:var(--soft)}
+.paired .pair-badge{background:var(--accent);color:#fff}
+.m-def.paired{box-shadow:inset 0 0 0 2px #93c5fd;background:var(--blue)}
+.m-term.good,.m-def.good{box-shadow:inset 0 0 0 2px var(--green)}
+.m-def.good{background:var(--mint)}
+.m-term.bad,.m-def.bad{box-shadow:inset 0 0 0 2px var(--red)}
+.m-def.bad{background:var(--rose)}
+.round-pills{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
+.round-pill{font-family:var(--mono);font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--soft);color:var(--muted)}
+.round-pill.cur{background:var(--accent);color:#fff}
+.round-pill.ok{background:var(--mint);color:var(--text)}
+
+/* Cas 2 */
+.group{border-radius:22px;padding:18px;margin-bottom:14px;background:var(--soft);box-shadow:inset 0 0 0 2px transparent}
+.group-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.g-label{font-size:.78rem;font-weight:800;color:var(--muted);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.05em}
+.choice-row{display:flex;flex-wrap:wrap;gap:8px}
+.choice{border:none;box-shadow:inset 0 0 0 1.5px var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-size:.84rem;font-weight:700;color:var(--text)}
+.choice.sel{background:var(--text);color:#fff;box-shadow:none}
+.choice.good{background:var(--green);color:#fff;box-shadow:none}
+.choice.bad{background:var(--red);color:#fff;box-shadow:none}
+.sit{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;border:none;box-shadow:inset 0 0 0 1.5px var(--line);border-radius:14px;padding:10px 12px;background:#fff;font-size:.9rem;margin-bottom:8px;color:var(--text)}
+.sit:hover{box-shadow:inset 0 0 0 2px var(--amber)}
+.sit .tag{font-size:.7rem;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.sit.sel{box-shadow:inset 0 0 0 2px var(--amber);background:var(--peach)}
+.sit.sel .tag{background:var(--amber);color:#fff}
+.sit.good{box-shadow:inset 0 0 0 2px var(--green);background:var(--mint)}
+.sit.good .tag{background:var(--green);color:#fff}
+.sit.bad{box-shadow:inset 0 0 0 2px var(--red);background:var(--rose)}
+.sit.bad .tag{background:var(--red);color:#fff}
+.group .expl{display:none;margin-top:10px;font-size:.88rem;padding-top:10px;border-top:1px dashed #cfd5de}
+.group.checked .expl{display:block}
+.group.correct{box-shadow:inset 0 0 0 2px var(--green)}
+.group.wrong{box-shadow:inset 0 0 0 2px var(--red)}
+.group.half{box-shadow:inset 0 0 0 2px var(--amber)}
+
+/* Formulaires */
+label.f-label{display:block;font-weight:700;font-size:.86rem;margin:14px 0 6px}
+input.f-input,textarea.f-input,select.f-input{width:100%;padding:11px 13px;border:none;box-shadow:inset 0 0 0 1.5px #cfd5de;border-radius:14px;font-family:var(--sans);font-size:.92rem;background:#fff;color:var(--text)}
+textarea.f-input{min-height:78px;resize:vertical}
+.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media(max-width:700px){.f-grid{grid-template-columns:1fr}}
+.f-grid .full{grid-column:1/-1}
+.inline-check{display:flex;gap:10px;align-items:center;margin-top:14px;font-weight:700;font-size:.88rem}
+.inline-check input{width:18px;height:18px;accent-color:var(--green)}
+
+.steps{margin:14px 0}
+.step{display:flex;gap:14px;padding:12px 0;border-bottom:1px dashed #d3d8e0;align-items:flex-start}
+.step:last-child{border-bottom:none}
+.step input[type=checkbox]{width:20px;height:20px;accent-color:var(--green);margin-top:3px;flex-shrink:0}
+.step .s-num{font-family:var(--mono);font-weight:700;color:var(--accent-dark);min-width:24px}
+.checklist label{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:14px;cursor:pointer}
+.checklist label:hover{background:var(--soft)}
+.card[class*="t-"] .checklist label:hover{background:#fff}
+.checklist input{width:18px;height:18px;accent-color:var(--green);margin-top:3px;flex-shrink:0}
+
+.table-wrap{overflow-x:auto;margin:14px 0}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;min-width:520px}
+th{background:var(--blue);color:var(--text);text-align:left;padding:11px 14px;font-weight:800;font-size:.82rem}
+th:first-child{border-top-left-radius:14px}th:last-child{border-top-right-radius:14px}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;background:#fff}
+.card[class*="t-"] td{background:rgba(255,255,255,.7)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-size:.78rem;font-weight:600;background:var(--soft);padding:4px 11px;border-radius:999px}
+
+.route{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:14px 0}
+.route-step{background:var(--soft);border-radius:18px;padding:12px;text-align:center}
+.route-step .n{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.route-step .t{font-weight:800;font-size:.92rem}
+.route-step .c{font-size:.76rem;color:var(--muted)}
+.route-step.past{background:var(--mint)}
+.route-step.here{background:var(--accent)}
+.route-step.here .t,.route-step.here .n,.route-step.here .c{color:#fff}
+
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.pillar{border-radius:20px;padding:16px;background:var(--blue)}
+.pillar:nth-child(5n+2){background:var(--peach)}.pillar:nth-child(5n+3){background:var(--mint)}.pillar:nth-child(5n+4){background:var(--lilac)}.pillar:nth-child(5n+5){background:var(--rose)}
+.pillar .n{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+.pillar h4{font-size:1rem;font-weight:800;margin:4px 0 6px}
+.pillar p{font-size:.86rem;margin:0}
+.pillar .q{font-size:.8rem;color:var(--muted);font-style:italic;margin-top:8px}
+
+.gloss{display:grid;gap:10px;margin-top:10px}
+.gloss-item{display:grid;grid-template-columns:200px 1fr;gap:14px;align-items:start;padding:12px 14px;border-radius:18px;background:var(--soft)}
+.gloss-item .gt{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+@media(max-width:620px){.gloss-item{grid-template-columns:1fr}}
+.lock-wrap{text-align:center;padding:30px 10px}
+.lock-wrap .big-lock{font-size:3rem}
+.lock-pills{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:16px}
+.lock-pill{font-size:.82rem;font-weight:700;padding:6px 14px;border-radius:999px;background:var(--soft)}
+.lock-pill.ok{background:var(--mint)}
+.filter-row{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+.filter-row button{border:none;box-shadow:inset 0 0 0 1.5px var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:.8rem;font-weight:700;color:var(--text)}
+.filter-row button.on{background:var(--text);color:#fff;box-shadow:none}
+.score-table td:last-child{font-family:var(--mono);font-weight:700}
+.link-card{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--blue);border-radius:22px;padding:16px 20px;margin-top:16px}
+/* Constructeur de prompt */
+.pb-item{border-radius:20px;background:var(--soft);padding:14px 16px;margin-top:12px}
+.pb-label{display:flex;align-items:center;gap:8px;font-weight:800}
+.pb-num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:9px;background:var(--accent);color:#fff;font-weight:800;font-size:.8rem}
+.pb-hint{font-size:.84rem;color:var(--muted);margin:2px 0 8px 34px}
+.pb-item .f-input{min-height:64px}
+#mtpChoices button.on{background:var(--accent);color:#fff;box-shadow:none}
+/* Poupées russes */
+.nest{border-radius:24px;padding:18px 20px;margin-top:14px;box-shadow:inset 0 0 0 1.5px rgba(22,24,29,.08)}
+.nest.n1{background:var(--blue);margin-top:6px}.nest.n2{background:var(--mint)}.nest.n3{background:var(--lilac)}
+.nest.n4{background:var(--accent);color:#fff;box-shadow:none}
+.nest-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.nest-head strong{font-size:1.05rem;font-weight:800}
+.nest .lvl{font-size:.74rem;font-weight:800;padding:4px 11px;border-radius:999px;background:#fff;color:var(--text)}
+.nest p{margin-bottom:0;font-size:.95rem}
+.nest .ex{font-size:.86rem;color:var(--muted);margin-top:4px}
+.nest.n4 .lvl{color:var(--accent-dark)}
+.nest.n4 .ex{color:#fff;opacity:.92}
+@media(max-width:600px){.nest{padding:14px 12px}}
+
+/* Autonomie */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:12px 0}
+.stat{border-radius:20px;padding:14px 16px;background:var(--soft)}
+.card[class*="t-"] .stat{background:#fff}
+.stat .v{font-size:2rem;font-weight:800;line-height:1.1}
+.stat .k{font-size:.8rem;font-weight:700;color:var(--muted)}
+.stat.ok{background:var(--mint)}
+.j-table td{font-size:.84rem}
+.j-table td.p{font-family:var(--mono);font-size:.78rem;max-width:320px;word-break:break-word}
+.counter{display:inline-flex;gap:6px;align-items:center;font-weight:800;font-size:.85rem;padding:6px 12px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1.5px var(--line)}
+.counter.ok{background:var(--mint);box-shadow:none}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:10px 18px;border-radius:999px;font-size:.86rem;opacity:0;pointer-events:none;transition:all .25s;z-index:100;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.nav-bottom{display:flex;justify-content:space-between;gap:10px;margin-top:12px;flex-wrap:wrap}
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:10px 16px 50px}
+@media print{.tabs-wrap,.actions-row,.nav-bottom{display:none}.panel{display:grid!important}}
+
+/* Icônes « tuile teintée » */
+.ico{display:inline-grid;place-items:center;width:1.65em;height:1.65em;border-radius:.55em;flex:none;vertical-align:-.45em;margin-right:.35em;line-height:1}
+.ico svg{width:60%;height:60%;stroke-width:2.2}
+.ti-blue{background:var(--blue);color:#1d4ed8}.ti-peach{background:var(--peach);color:#b45309}.ti-mint{background:var(--mint);color:#15803d}.ti-lilac{background:var(--lilac);color:#6d28d9}.ti-rose{background:var(--rose);color:#b91c1c}
+.ico.ti-bare{background:transparent;width:1.1em;height:1.1em;margin:0 .15em;vertical-align:-.18em}
+.ico.ti-bare svg{width:100%;height:100%}
+.card[class*="t-"] .ico:not(.ti-bare),.mini-card .ico:not(.ti-bare),.meta-pill .ico,.objectif-box .ico,.instruction-box .ico,.key-box .ico,.warn-box .ico,.pillar .ico,.famille-tag .ico,.media .ico,.lock-pill .ico,.pill .ico,.trainer .ico,.tag .ico,.link-card .ico,.stat .ico,.route-step .ico,.chip .ico,td .ico,.sit .ico{background:#fff}
+.tab .ico{width:1.75em;height:1.75em;margin-right:.1em}
+.tab.active .ico{background:rgba(255,255,255,.22);color:#fff}
+.tab .done-mark .ico{margin:0 0 0 .1em}
+.btn .ico:not(.ti-bare){width:1.6em;height:1.6em;margin:-.2em .05em -.2em -.35em}
+.btn-primary .ico:not(.ti-bare),.btn-success .ico:not(.ti-bare),.btn-warning .ico:not(.ti-bare){background:rgba(255,255,255,.22);color:#fff}
+.btn-ghost .ico.ti-bare{color:var(--text)}
+.badge .ico{background:rgba(255,255,255,.22);color:#fff;margin-left:-.4em}
+.big-lock .ico{width:72px;height:72px;border-radius:24px;margin:0}
+.icon-bg svg{width:22px;height:22px;stroke-width:2.1;color:#1d4ed8}
+.icon-bg.green svg{color:#15803d}.icon-bg.amber svg{color:#b45309}.icon-bg.purple svg{color:#6d28d9}.icon-bg.red svg{color:#b91c1c}
+.media{display:inline-flex;align-items:center}
+.media .ico{width:1.5em;height:1.5em;margin:-.15em .25em -.15em -.45em}
+.mini-card h4 .ico,h3 .ico{margin-right:.1em}
+
+/* ===== Gabarit « sommaire latéral » ===== */
+.wrap{max-width:1400px;padding:28px 16px 0}
+.hgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.hgrid .hero{grid-column:span 3;display:flex;flex-direction:column;gap:14px;padding:30px}
+.hgrid .hero h1{margin:0}.hgrid .hero .subtitle{margin:0}.hgrid .hero .meta-pills{margin:0}
+.fam-row{display:flex;flex-wrap:wrap;gap:8px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hgrid .hero .badge{align-self:flex-start;margin:0}
+.result{grid-column:span 1;display:flex;flex-direction:column;justify-content:space-between;gap:12px;background:var(--mint);border-radius:var(--r);padding:24px}
+.result .section-title{margin:0;font-size:1.05rem}
+.result .icon-bg{background:#fff}
+.big{font-size:64px;font-weight:800;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin:0}
+.big small{font-size:22px;color:var(--muted);font-weight:700;letter-spacing:0;margin-left:4px}
+.result .track{background:rgba(21,128,61,.18)}
+.result .hint{font-size:.85rem;color:var(--muted);margin:0}
+.result .mode-flag{margin-top:0}
+.layout{max-width:1400px;margin:16px auto 0;padding:0 16px 60px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px;align-items:start}
+.sidebar{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto;background:var(--tile);border-radius:var(--r);padding:18px 14px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0}
+.sidebar .eyebrow{padding-inline:8px}
+.sidebar .tabs{display:flex;flex-direction:column;gap:4px;padding:0;overflow:visible;max-width:none;margin:0}
+.sidebar .tab{font-size:.9rem;font-weight:700;color:var(--text);background:transparent;border-radius:16px;padding:10px 10px 10px 12px;display:flex;align-items:center;gap:10px;text-align:left;width:100%;white-space:normal;box-shadow:none}
+.sidebar .tab:hover{background:var(--blue);box-shadow:none}
+.sidebar .tab.active{background:var(--text);color:#fff}
+.sidebar .tab.active .dot{box-shadow:0 0 0 2px #fff}
+.jump-label{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:8px;line-height:1.3}
+.jump-num{font:600 12px var(--mono);opacity:.7}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.d-blue{background:#1d4ed8}.d-peach{background:#b45309}.d-mint{background:#15803d}.d-lilac{background:#6d28d9}.d-rose{background:#b91c1c}.d-ink{background:var(--accent)}
+.sidebar .tab .done-mark .ico{margin:0}
+.sidebar .tab .lock-mark .ico{margin:0}
+.ctls{display:flex;gap:8px;flex-wrap:wrap;padding:10px 4px 0;border-top:1px solid var(--line);margin-top:6px}
+.ctl{font:700 13px var(--sans);color:var(--text);background:transparent;border:2px solid var(--line);border-radius:999px;padding:6px 12px}
+.ctl:hover{background:var(--bg)}
+.pages{min-width:0;max-width:none;margin:0;padding:0}
+.panel{display:none}
+.panel.active{display:flex;flex-direction:column;gap:16px;animation:fadeIn .3s ease}
+.pgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.page-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-radius:var(--r);padding:18px 22px}
+.page-head.t-blue{background:var(--blue)}.page-head.t-peach{background:var(--peach)}.page-head.t-mint{background:var(--mint)}.page-head.t-lilac{background:var(--lilac)}.page-head.t-rose{background:var(--rose)}
+.page-head .icon-bg{background:#fff;font-weight:800;font-size:16px;font-variant-numeric:tabular-nums}
+.sum-text{display:flex;flex-direction:column;flex:1 1 220px;min-width:0}
+.sum-title{font-size:1.4rem;font-weight:800;line-height:1.25}
+.sum-sub{font-size:.9rem;color:var(--muted)}
+.status{font-size:.78rem;font-weight:800;background:#fff;padding:4px 12px;border-radius:999px;display:inline-flex;align-items:center}
+.status .s-ok{display:none;align-items:center}.panel.is-done .status .s-ok{display:inline-flex}.panel.is-done .status .s-todo{display:none}
+.status .ico{width:1.4em;height:1.4em}
+.pager{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.pg{font:700 14px var(--sans);border:0;border-radius:999px;padding:11px 20px;background:var(--tile);color:var(--text);display:inline-flex;align-items:center;gap:4px}
+.pg:hover{background:var(--blue)}
+.pg.primary{background:var(--text);color:#fff}.pg.primary:hover{background:#2b303b}
+.pg .ico.ti-bare{color:inherit}
+.card .nav-bottom{display:none}
+.card .section-title > div{display:flex;flex-direction:column}
+details.sub{grid-column:span 4}
+details.sub > summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:10px;background:var(--tile);border-radius:999px;padding:8px 8px 8px 16px;font-weight:800;font-size:15px}
+details.sub > summary::-webkit-details-marker{display:none}
+details.sub > summary .tab-count{font-size:12px;font-weight:700;background:var(--bg);padding:2px 10px;border-radius:999px}
+details.sub > .pgrid{margin-top:12px}
+.chev{width:24px;height:24px;border-radius:50%;background:rgba(22,24,29,.07);position:relative;flex:none}
+.chev::before{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;border-right:2px solid var(--text);border-bottom:2px solid var(--text);transform:translate(-50%,-70%) rotate(45deg);transition:transform .2s}
+details[open] > summary > .chev::before{transform:translate(-50%,-30%) rotate(-135deg)}
+ul.checks{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+ul.checks.cols{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 24px}
+ul.checks li{padding-left:28px;position:relative}
+ul.checks li::before{content:"✓";position:absolute;left:0;top:3px;width:18px;height:18px;border-radius:6px;background:var(--mint);color:#15803d;font-size:12px;font-weight:800;display:grid;place-items:center}
+.card.analogie p{font-size:1rem}
+.card .objectif{font-size:.9rem;color:var(--muted);margin-top:10px}
+footer{grid-column:1/-1}
+@media (max-width:1000px){
+  .hgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.hgrid .hero{grid-column:span 2}.result{grid-column:span 2}
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .sidebar{position:static;max-height:none;padding:16px}
+  .sidebar .eyebrow{padding-inline:0}
+  .sidebar .tabs{flex-direction:row;flex-wrap:wrap}
+  .sidebar .tab{width:auto;border-radius:999px;background:var(--bg);padding:9px 14px}
+  .ctls{border-top:0;padding:4px 0 0;margin-top:0}
+  .pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pgrid > .card,.pgrid > .card.three,.pgrid > details.sub{grid-column:span 2}
+  .pgrid > .card.half{grid-column:span 1}
+}
+@media (max-width:680px){
+  .hgrid,.pgrid{grid-template-columns:minmax(0,1fr)}
+  .hgrid .hero,.result,.pgrid > .card,.pgrid > .card.half,.pgrid > .card.quarter,.pgrid > details.sub{grid-column:span 1}
+  .big{font-size:52px}
+  .page-head{padding:16px}
+}
+@media print{.sidebar,.pager{display:none}.layout{grid-template-columns:1fr}.panel{display:flex!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hgrid">
+  <div class="hero">
+    <span class="badge"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2" /><path d="M6.453 15h11.094" /><path d="M8.5 2h7" /></svg></span>Learning Lab' IA · Séance 4 · Support théorique</span>
+    <h1>Finaliser son projet et <em>transmettre</em></h1>
+    <p class="subtitle">Corriger les erreurs fréquentes, améliorer ton livrable avec l'auto-critique, transformer tes prompts en modèles réutilisables et réussir ta soutenance.</p>
+    <div class="meta-pills"><span class="meta-pill"><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14 21v-3a2 2 0 0 0-4 0v3" /><path d="M18 4.933V21" /><path d="m4 6 7.106-3.79a2 2 0 0 1 1.788 0L20 6" /><path d="m6 11-3.52 2.147a1 1 0 0 0-.48.854V19a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a1 1 0 0 0-.48-.853L18 11" /><path d="M6 4.933V21" /><circle cx="12" cy="9" r="2" /></svg></span>Séance 4 sur 4 · en cours</span><span class="meta-pill"><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg></span>4 chapitres</span><span class="meta-pill"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>20 questions de QCM</span><span class="meta-pill"><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg></span>Livrable : soutenance</span></div>
+    <div class="fam-row"><span class="famille-tag f1">Retour d&#x27;expérience</span><span class="famille-tag f2">Techniques avancées</span><span class="famille-tag f3">Transmission</span></div>
+  </div>
+  <div class="result">
+    <div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg></span>Progression</div>
+    <p class="big"><span id="globalNum">0</span><small>/4</small></p>
+    <div class="track" id="globalBar" role="progressbar" aria-label="QCM de chapitre validés" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><div class="fill" id="globalFill"></div></div>
+    <p class="hint">QCM de chapitre validés</p>
+    <div class="mode-flag">Mode formateur : corrigés visibles</div>
+  </div>
+</header>
+</div>
+<div class="layout">
+  <aside class="sidebar" aria-label="Sommaire">
+    <p class="eyebrow">Sommaire</p>
+    <nav class="tabs" role="tablist" aria-orientation="vertical" aria-label="Sections du support"><button class="tab active" data-tab="0" role="tab" aria-selected="true"><span class="dot d-blue"></span><span class="jump-label"><span class="jump-num">00</span>Démarrage</span></button><button class="tab" data-tab="c0" data-act="ch0" role="tab" aria-selected="false"><span class="dot d-blue"></span><span class="jump-label"><span class="jump-num">01</span>Erreurs fréquentes</span><span class="done-mark"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span></span></button><button class="tab" data-tab="c1" data-act="ch1" role="tab" aria-selected="false"><span class="dot d-peach"></span><span class="jump-label"><span class="jump-num">02</span>L’auto-critique</span><span class="done-mark"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span></span></button><button class="tab" data-tab="c2" data-act="ch2" role="tab" aria-selected="false"><span class="dot d-mint"></span><span class="jump-label"><span class="jump-num">03</span>Le prompt-modèle</span><span class="done-mark"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span></span></button><button class="tab" data-tab="c3" data-act="ch3" role="tab" aria-selected="false"><span class="dot d-lilac"></span><span class="jump-label"><span class="jump-num">04</span>La soutenance</span><span class="done-mark"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span></span></button><button class="tab" data-tab="syn" role="tab" aria-selected="false"><span class="dot d-rose"></span><span class="jump-label"><span class="jump-num">★</span>Synthèse</span></button></nav>
+    <span class="ctls"><button class="ctl" type="button" id="expandAll">Tout déplier</button><button class="ctl" type="button" id="collapseAll">Tout replier</button></span>
+  </aside>
+  <main class="pages">
+<section class="panel active" data-panel="0" role="tabpanel"><div class="page-head t-blue"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09" /><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z" /><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05" /></svg></span><span class="sum-text"><span class="sum-title">Démarrage</span><span class="sum-sub">Où en est-on, déroulé et objectifs de la séance</span></span></div><div class="pgrid">
+<div class="card"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg></span>Où en est-on dans le module ?</div><div class="key-box"><div class="big">Je sais transmettre ce que j'ai appris.</div><p style="margin:8px 0 0">Tu as exploré, douté, documenté. Il te reste à polir ton travail et à le partager : ce que tu as découvert peut faire gagner des heures à toute ta promo.</p></div><div class="route"><div class="route-step past"><div class="n">1</div><div class="t">Explorer</div><div class="c">Les 4 familles d'IA</div></div><div class="route-step past"><div class="n">2</div><div class="t">Choisir</div><div class="c">Fiche de cadrage</div></div><div class="route-step past"><div class="n">3</div><div class="t">Prompter</div><div class="c">Parler à l'IA</div></div><div class="route-step past"><div class="n">4</div><div class="t">Douter</div><div class="c">Repérer les limites</div></div><div class="route-step past"><div class="n">5</div><div class="t">Documenter</div><div class="c">Journal de bord</div></div><div class="route-step here"><div class="n">6</div><div class="t">Formaliser</div><div class="c">Cheat sheet finale</div></div><div class="route-step here"><div class="n">7</div><div class="t">Transmettre</div><div class="c">Soutenance</div></div></div><p class="muted">En vert : les étapes franchies. En bleu : les étapes de cette dernière séance.</p><h3>Le déroulé de la séance</h3><div class="table-wrap"><table><tr><th>Temps</th><th>Durée</th><th>Ce qui se passe</th></tr><tr><td><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 18V5" /><path d="M15 13a4.17 4.17 0 01-3-4 4.17 4.17 0 01-3 4" /><path d="M17.707 6.294A3 3 0 1012 5a3 3 0 10-5.707 1.294" /><path d="M17.996 5.125a4 4 0 012.526 5.77" /><path d="M18 18a4 4 0 002-7.465" /><path d="M19.967 17.482a4 4 0 11-7.967.517 4 4 0 11-7.967-.517" /><path d="M6 18a4 4 0 01-2-7.465" /><path d="M6.004 5.125a4 4 0 00-2.526 5.77" /></svg></span>Complément</td><td>20 min</td><td>Erreurs fréquentes, auto-critique, prompt-modèle (chapitres 1 à 3)</td></tr><tr><td><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" /></svg></span>Finalisation accompagnée</td><td>45 min</td><td>Tu appliques les deux techniques, tu finalises ta cheat sheet et ton support. Le formateur passe voir chacun.</td></tr><tr><td><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg></span>Soutenances</td><td>2 h</td><td>Deux groupes, 4 min de présentation et de démo + 2 min de questions par étudiant</td></tr><tr><td><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528" /></svg></span>Synthèse</td><td>15 min</td><td>Mur des bonnes pratiques, recueil des cheat sheets, auto-évaluation</td></tr></table></div></div>
+<div class="card"><div class="section-title"><span class="icon-bg green"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Objectifs de la séance</div><div class="objectif-box"><strong class="title">À la fin de cette séance, tu seras capable de :</strong><ul class="clean"><li>Repérer et corriger les erreurs les plus fréquentes du module ;</li><li>Faire critiquer un résultat par l'IA pour l'améliorer, sans lui déléguer ton jugement ;</li><li>Transformer ton meilleur prompt en prompt-modèle réutilisable par d'autres ;</li><li>Présenter ton projet en 4 minutes de façon claire et technique ;</li><li>Donner un retour utile à tes camarades et argumenter tes choix.</li></ul></div><div class="grid grid-2"><div class="mini-card"><h4><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" /><path d="M8 10h8" /><path d="M8 18h8" /><path d="M8 22v-6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6" /><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" /></svg></span>À avoir avec toi</h4><ul class="clean"><li>Ton journal de bord exporté et ta cheat sheet (jalon 2)</li><li>Les fichiers de ton livrable IA, téléchargés sur ton ordinateur</li><li>Ton plan de soutenance en 6 temps</li></ul></div><div class="mini-card"><h4><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z" /></svg></span>Les 3 familles de notions</h4><div class="chips" style="margin-top:4px"><span class="famille-tag f1">Retour d'expérience</span><span class="famille-tag f2">Techniques avancées</span><span class="famille-tag f3">Transmission</span></div><p class="muted" style="margin-top:10px">Pas de support pratique aujourd'hui : le temps de pratique sert à finaliser ton projet.</p></div></div><div class="instruction-box"><strong class="title">Comment utiliser ce support</strong>Les chapitres 1 à 3 accompagnent le complément du début de séance. Le chapitre 4 te prépare à la soutenance. Valide chaque QCM de fin de chapitre avant de finaliser ton projet.</div><div class="link-card"><span><strong><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span>Guide d'autonomie · Séances 2-3</strong><br><span class="muted">Ton journal, ta cheat sheet et ton plan de soutenance y sont toujours enregistrés.</span></span><a class="btn btn-ghost" href="../Seances_2-3/seances-2-3-experimenter-en-autonomie.html">Ouvrir le guide <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></a></div><div class="nav-bottom"><span></span><button class="btn btn-primary" data-goto="c0">Commencer : <span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /><circle cx="12" cy="12" r="3" /><path d="m16 16-1.9-1.9" /></svg></span>Erreurs fréquentes <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div></div>
+
+</div><div class="pager"><span></span><button class="pg primary" type="button" data-goto="c0">Erreurs fréquentes <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div></section>
+<section class="panel" data-panel="c0" data-act="ch0" role="tabpanel"><div class="page-head t-blue"><span class="icon-bg">01</span><span class="sum-text"><span class="sum-title">Erreurs fréquentes</span><span class="sum-sub">Les 5 erreurs à corriger avant la soutenance</span></span><span class="status"><span class="s-todo">À valider</span><span class="s-ok"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Validé</span></span></div><div class="pgrid">
+<div class="card half"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg></span><div><p class="eyebrow">L’idée</p>En deux mots</div></div><p class="lead">Avant de finaliser, relis ton travail en cherchant les <strong>erreurs qui reviennent le plus souvent</strong> dans le module : prompt vague, journal sans échec, cheat sheet inutilisable, livrable non vérifié, démo fragile.</p><p class="objectif"><strong>Objectif :</strong> Relire ton journal, ta cheat sheet et ton livrable avec un regard critique, et corriger avant la soutenance.</p></div>
+<div class="card half t-blue analogie"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg></span><div><p class="eyebrow">Pour s’en souvenir</p>L’analogie</div></div><p>Le <strong>contrôle technique avant un long trajet</strong> : on vérifie les pneus, les freins et les phares avant de partir, pas au bord de la route. Mieux vaut trouver l'erreur maintenant que devant la promo.</p></div>
+<div class="card"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /><circle cx="12" cy="12" r="3" /><path d="m16 16-1.9-1.9" /></svg></span>Les erreurs fréquentes du module</div><p class="lead">Avant de finaliser, un coup d'œil aux erreurs qui reviennent le plus souvent. Si tu en reconnais une dans ton travail, c'est le moment de la corriger.</p><h3>1 · Le prompt trop vague</h3><div class="grid grid-2"><div class="mini-card bad"><h4><span class="ico ti-rose"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span>Ce qu'on voit souvent</h4><p class="muted">« Fais une belle affiche. » L'IA improvise tout : sujet, style, couleurs, cadrage.</p></div><div class="mini-card good"><h4><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Ce qu'on attend</h4><p class="muted">Les 5 Piliers : contexte, rôle, objectif, contraintes, exemple. Des chiffres et des mots précis plutôt que « beau » ou « mieux ».</p></div></div><h3>2 · Le journal sans échec ni analyse</h3><div class="grid grid-2"><div class="mini-card bad"><h4><span class="ico ti-rose"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span>Ce qu'on voit souvent</h4><p class="muted">Dix réussites d'affilée, sans note ni explication. On ne voit pas la démarche.</p></div><div class="mini-card good"><h4><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Ce qu'on attend</h4><p class="muted">Chaque essai noté, les échecs compris, avec une analyse (pourquoi ?) et une prochaine étape (et maintenant ?).</p></div></div><h3>3 · La cheat sheet impossible à réutiliser</h3><div class="grid grid-2"><div class="mini-card bad"><h4><span class="ico ti-rose"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span>Ce qu'on voit souvent</h4><p class="muted">Des prompts pleins de détails de ton projet, ou des conseils trop généraux comme « sois précis ».</p></div><div class="mini-card good"><h4><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Ce qu'on attend</h4><p class="muted">Des prompts-modèles avec des [VARIABLES], que n'importe qui peut adapter. Des pièges concrets, tirés de ton expérience.</p></div></div><h3>4 · Le livrable ni vérifié ni signalé</h3><div class="grid grid-2"><div class="mini-card bad"><h4><span class="ico ti-rose"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span>Ce qu'on voit souvent</h4><p class="muted">Un fait inventé dans le texte, une faute dans l'image, aucune mention de l'IA.</p></div><div class="mini-card good"><h4><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Ce qu'on attend</h4><p class="muted">Faits vérifiés, texte relu, mention « Généré avec [outil] » visible.</p></div></div><h3>5 · La démo qui dépend du réseau</h3><div class="grid grid-2"><div class="mini-card bad"><h4><span class="ico ti-rose"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span>Ce qu'on voit souvent</h4><p class="muted">Le jour J, le quota est atteint ou le Wi-Fi tombe : plus rien à montrer.</p></div><div class="mini-card good"><h4><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Ce qu'on attend</h4><p class="muted">Tous les fichiers téléchargés à l'avance, une capture de secours pour chaque étape de la démo.</p></div></div><div class="trainer formateur-only"><strong><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M2 3h20" /><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3" /><path d="m7 21 5-5 5 5" /></svg></span>Note formateur</strong> Ouvre le complément avec 2 ou 3 exemples réels, anonymisés, relevés dans les dépôts des jalons 1 et 2. Limite l'apport à 20 minutes pour préserver la finalisation.</div><div class="key-box"><div class="big">Une erreur repérée avant la soutenance n'est plus une erreur : c'est une amélioration.</div></div></div>
+<div class="card"><div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 17v5" /><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" /></svg></span>À retenir</div><ul class="checks cols"><li>Un prompt précis s'écrit avec les 5 Piliers, pas avec « beau » ou « mieux ».</li><li>Un journal crédible montre aussi les échecs, avec leur analyse.</li><li>Une cheat sheet se réutilise sans poser de question.</li><li>Faits vérifiés, texte relu et mention de l'IA visible.</li><li>Une démo qui fonctionne hors connexion.</li></ul></div>
+<details class="sub" open><summary><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>Vérifier tes acquis<span class="tab-count">5 questions</span><span class="chev" aria-hidden="true"></span></summary><div class="pgrid"><div class="card">
+  <div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>QCM · Chapitre 1</div>
+  <div class="instruction-box"><strong class="title">Consigne</strong>Une seule bonne réponse par question. Réponds à tout, vérifie, puis lis les explications, y compris pour les bonnes réponses. Questions et options sont mélangées à chaque essai.</div>
+  <div id="qcm0"></div>
+  <div class="progress-wrap"><div class="progress-label"><span>Réponses données</span><span id="qtxt0">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="qfill0"></div></div></div>
+  <div class="actions-row">
+    <button class="btn btn-primary" data-qcheck="0"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 6 9 17l-5-5" /></svg></span>Vérifier</button>
+    <button class="btn btn-warning btn-reveal" data-qreveal="0"><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg></span>Révéler</button>
+    <button class="btn btn-ghost" data-qreset="0"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg></span>Recommencer</button>
+  </div>
+  <div class="result-panel" id="qres0"></div>
+  <div class="nav-bottom" style="margin-top:20px"><button class="btn btn-ghost" data-goto="0"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Précédent</button><button class="btn btn-primary" data-goto="c1">Suite <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div>
+</div>
+</div></details>
+
+</div><div class="pager"><button class="pg" type="button" data-goto="0"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Démarrage</button><button class="pg primary" type="button" data-goto="c1">L’auto-critique <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div></section>
+<section class="panel" data-panel="c1" data-act="ch1" role="tabpanel"><div class="page-head t-peach"><span class="icon-bg">02</span><span class="sum-text"><span class="sum-title">L’auto-critique</span><span class="sum-sub">Le réflexe « vérifier » appliqué à ton livrable</span></span><span class="status"><span class="s-todo">À valider</span><span class="s-ok"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Validé</span></span></div><div class="pgrid">
+<div class="card half"><div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg></span><div><p class="eyebrow">L’idée</p>En deux mots</div></div><p class="lead">Au lieu de demander « c'est bien ? », tu demandes à l'IA de <strong>chercher les faiblesses</strong> de son résultat, puis de proposer une correction. Ce n'est pas un nouveau type de prompt : c'est le réflexe « vérifier », écrit avec les 5 Piliers.</p><p class="objectif"><strong>Objectif :</strong> Améliorer ton livrable en une ou deux itérations, en t'appuyant sur tes critères de réussite.</p></div>
+<div class="card half t-peach analogie"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg></span><div><p class="eyebrow">Pour s’en souvenir</p>L’analogie</div></div><p>La <strong>relecture par un éditeur exigeant</strong> : un auteur ne lui demande pas « tu aimes ? » mais « qu'est-ce qui ne va pas ? ». La critique est utile parce qu'elle est précise, et c'est l'auteur qui décide de ce qu'il garde.</p></div>
+<div class="card"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg></span>L'auto-critique : faire relire l'IA par l'IA</div><p class="lead">Au lieu de demander « c'est bien ? », tu demandes à l'IA de <strong>chercher les faiblesses</strong> de son propre résultat, puis de proposer une correction. C'est toi qui décides de ce que tu gardes.</p><div class="route"><div class="route-step"><div class="n">1</div><div class="t">Générer</div><div class="c">Ton meilleur résultat</div></div><div class="route-step"><div class="n">2</div><div class="t">Critiquer</div><div class="c">Selon tes critères de réussite</div></div><div class="route-step"><div class="n">3</div><div class="t">Choisir</div><div class="c">Une seule correction</div></div><div class="route-step"><div class="n">4</div><div class="t">Régénérer</div><div class="c">Et comparer</div></div><div class="route-step"><div class="n">5</div><div class="t">Noter</div><div class="c">Dans le journal</div></div></div><div class="grid grid-2"><div class="mini-card bad"><h4><span class="ico ti-rose"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span>Demande complaisante</h4><pre class="prompt">C'est bien, non ?</pre><p class="muted">Réponse presque garantie : « Oui, c'est très réussi ! »</p></div><div class="mini-card good"><h4><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Demande d'auto-critique</h4><pre class="prompt">Relis ton texte comme un <span class="hl3">éditeur exigeant</span>. Évalue-le selon ces critères : <span class="hl">[TES 3 CRITÈRES DE RÉUSSITE]</span>. Liste ses <span class="hl2">3 plus grandes faiblesses</span>, puis propose une version corrigée.</pre></div></div></div>
+<div class="card"><div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2" /><path d="M6.453 15h11.094" /><path d="M8.5 2h7" /></svg></span>L'auto-critique selon ta famille</div><div class="grid grid-2"><div class="mini-card c-blue"><h4><span class="media"><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" /><path d="M7 11h10" /><path d="M7 15h6" /><path d="M7 7h8" /></svg></span>Texte</span></h4><p>L'IA relit directement son texte ou son code.</p><pre class="prompt">Relis ce code comme un développeur senior. Liste les erreurs possibles et ce qui manque pour un débutant, puis propose une version corrigée et commentée.</pre></div><div class="mini-card c-peach"><h4><span class="media"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z" /><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /></svg></span>Image</span></h4><p>Si ton outil accepte les images, montre-lui ton résultat. Sinon, décris-le à une IA de texte avec ton prompt.</p><pre class="prompt">Voici mon prompt et ce que j'ai obtenu : [DESCRIPTION]. Mon objectif : [CRITÈRES]. Quelles 3 modifications du prompt rapprocheraient le résultat de mon objectif ?</pre></div><div class="mini-card c-mint"><h4><span class="media"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M21 16V3a1 1 0 0 0-1.28-.96l-10 2.917a1 1 0 0 0-.72.96V19" /><circle cx="18" cy="16" r="3" /><circle cx="6" cy="19" r="3" /></svg></span>Audio</span></h4><p>Décris ce que tu entends à une IA de texte et donne-lui ton prompt.</p><pre class="prompt">Voici mon prompt Suno et ce que j'entends : [DESCRIPTION]. Le refrain manque d'énergie. Propose 3 reformulations du style et de la structure.</pre></div><div class="mini-card c-lilac"><h4><span class="media"><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m12.296 3.464 3.02 3.956" /><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3z" /><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m6.18 5.276 3.1 3.899" /></svg></span>Vidéo</span></h4><p>Même méthode : décris plan par plan ce qui ne va pas.</p><pre class="prompt">Voici mon prompt vidéo et le résultat : [DESCRIPTION]. Le mouvement de caméra est saccadé. Propose une version plus simple du prompt.</pre></div></div><div class="warn-box"><strong><span class="ico ti-rose"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 16h.01" /><path d="M12 8v4" /><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z" /></svg></span>Attention</strong> L'auto-critique n'est pas une vérité. L'IA peut se tromper sur son propre travail, ou se montrer complaisante si tu ne demandes pas explicitement des faiblesses. Tu restes le juge final.</div><div class="key-box"><div class="big">Demande des faiblesses, pas des compliments.</div></div></div>
+<div class="card"><div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 17v5" /><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" /></svg></span>À retenir</div><ul class="checks cols"><li>Demande des <strong>faiblesses</strong>, jamais une validation.</li><li>Donne tes critères de réussite : l'IA critique par rapport à eux.</li><li>Applique une seule correction à la fois, puis compare.</li><li>Note l'auto-critique et son résultat dans ton journal.</li><li>L'IA peut se tromper sur son propre travail : tu restes le juge final.</li></ul></div>
+<details class="sub" open><summary><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>Vérifier tes acquis<span class="tab-count">5 questions</span><span class="chev" aria-hidden="true"></span></summary><div class="pgrid"><div class="card">
+  <div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>QCM · Chapitre 2</div>
+  <div class="instruction-box"><strong class="title">Consigne</strong>Une seule bonne réponse par question. Réponds à tout, vérifie, puis lis les explications, y compris pour les bonnes réponses. Questions et options sont mélangées à chaque essai.</div>
+  <div id="qcm1"></div>
+  <div class="progress-wrap"><div class="progress-label"><span>Réponses données</span><span id="qtxt1">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="qfill1"></div></div></div>
+  <div class="actions-row">
+    <button class="btn btn-primary" data-qcheck="1"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 6 9 17l-5-5" /></svg></span>Vérifier</button>
+    <button class="btn btn-warning btn-reveal" data-qreveal="1"><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg></span>Révéler</button>
+    <button class="btn btn-ghost" data-qreset="1"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg></span>Recommencer</button>
+  </div>
+  <div class="result-panel" id="qres1"></div>
+  <div class="nav-bottom" style="margin-top:20px"><button class="btn btn-ghost" data-goto="c0"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Précédent</button><button class="btn btn-primary" data-goto="c2">Suite <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div>
+</div>
+</div></details>
+
+</div><div class="pager"><button class="pg" type="button" data-goto="c0"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Erreurs fréquentes</button><button class="pg primary" type="button" data-goto="c2">Le prompt-modèle <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div></section>
+<section class="panel" data-panel="c2" data-act="ch2" role="tabpanel"><div class="page-head t-mint"><span class="icon-bg">03</span><span class="sum-text"><span class="sum-title">Le prompt-modèle</span><span class="sum-sub">Ton meilleur prompt, réutilisable par tous</span></span><span class="status"><span class="s-todo">À valider</span><span class="s-ok"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Validé</span></span></div><div class="pgrid">
+<div class="card half"><div class="section-title"><span class="icon-bg green"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg></span><div><p class="eyebrow">L’idée</p>En deux mots</div></div><p class="lead">Un prompt-modèle est ton <strong>meilleur prompt 5 Piliers transformé en gabarit</strong> : ce qui change d'un usage à l'autre devient une [VARIABLE], ce qui fait la qualité du résultat reste écrit en dur.</p><p class="objectif"><strong>Objectif :</strong> Transformer tes meilleurs prompts en modèles que n'importe quel camarade peut réutiliser, et les intégrer à ta cheat sheet.</p></div>
+<div class="card half t-mint analogie"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg></span><div><p class="eyebrow">Pour s’en souvenir</p>L’analogie</div></div><p>Un <strong>formulaire à trous</strong>, comme un modèle de lettre : la structure est déjà écrite et éprouvée, chacun n'a qu'à remplir les cases avec ses propres informations.</p></div>
+<div class="card"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z" /></svg></span>Le prompt-modèle : un prompt réutilisable</div><p class="lead">Un prompt-modèle est un <strong>gabarit</strong> : ton meilleur prompt, dans lequel les éléments qui changent d'un usage à l'autre sont remplacés par des <strong>[VARIABLES]</strong>.</p><h3>Du prompt réussi au prompt-modèle</h3><div class="grid grid-2"><div class="mini-card"><h4>Avant · prompt réussi (5/5)</h4><pre class="prompt">Affiche verticale pour le festival « Campus Live » : une foule d'étudiants vue de dos devant une scène, style illustration flat, couleurs néon violet et orange, espace vide en haut pour le titre, sans texte.</pre></div><div class="mini-card good"><h4>Après · prompt-modèle</h4><pre class="prompt">Affiche verticale pour <span class="hl">[NOM DE L'ÉVÉNEMENT]</span> : <span class="hl">[SUJET PRINCIPAL]</span>, style <span class="hl">[STYLE]</span>, couleurs <span class="hl">[2 COULEURS]</span>, espace vide en haut pour le titre, sans texte.</pre></div></div><h3>Les règles d'un bon prompt-modèle</h3><ul class="clean"><li>Il part d'un prompt qui a <strong>vraiment fonctionné</strong> dans ton journal.</li><li>Les variables sont en <strong>MAJUSCULES entre crochets</strong>, avec un nom explicite.</li><li>Peu de variables : 3 à 5, seulement sur ce qui change vraiment d'un usage à l'autre.</li><li>Ce qui fait la qualité du résultat reste <strong>en dur</strong> : « espace vide pour le titre », « sans texte ».</li><li>Une ligne d'usage l'accompagne : à quoi il sert, et un exemple de valeurs.</li></ul></div>
+<div class="card"><div class="section-title"><span class="icon-bg green"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 5a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2.5a1.5 1.5 0 0 1 1.2.6l.6.8a1.5 1.5 0 0 0 1.2.6z" /><path d="M3 8.268a2 2 0 0 0-1 1.738V19a2 2 0 0 0 2 2h11a2 2 0 0 0 1.732-1" /></svg></span>Un modèle par famille</div><div class="grid grid-2"><div class="mini-card c-blue"><h4><span class="media"><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" /><path d="M7 11h10" /><path d="M7 15h6" /><path d="M7 7h8" /></svg></span>Texte</span></h4><pre class="prompt">Tu es [MÉTIER]. Écris [TYPE DE TEXTE] pour [PUBLIC] sur [SUJET]. [LONGUEUR] maximum, ton [TON]. Présente le résultat en [FORMAT].</pre></div><div class="mini-card c-peach"><h4><span class="media"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z" /><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /></svg></span>Image</span></h4><pre class="prompt">[TYPE DE VISUEL] pour [USAGE] : [SUJET], style [STYLE], couleurs [2 COULEURS], [CADRAGE], sans texte, sans logo.</pre></div><div class="mini-card c-mint"><h4><span class="media"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M21 16V3a1 1 0 0 0-1.28-.96l-10 2.917a1 1 0 0 0-.72.96V19" /><circle cx="18" cy="16" r="3" /><circle cx="6" cy="19" r="3" /></svg></span>Audio</span></h4><pre class="prompt">[GENRE] [AMBIANCE], tempo [TEMPO], [INSTRUMENTS], voix [TYPE DE VOIX] en [LANGUE], refrain accrocheur sur [THÈME].</pre></div><div class="mini-card c-lilac"><h4><span class="media"><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m12.296 3.464 3.02 3.956" /><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3z" /><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m6.18 5.276 3.1 3.899" /></svg></span>Vidéo</span></h4><pre class="prompt">Plan [TYPE DE PLAN] de [SUJET] qui [ACTION], caméra [MOUVEMENT], ambiance [AMBIANCE], [DURÉE] secondes, sans texte à l'écran.</pre></div></div><div class="instruction-box"><strong class="title">Le test du camarade</strong>Donne ton prompt-modèle à un camarade qui n'utilise pas ton outil. S'il obtient un résultat correct sans te poser de question, ton modèle est prêt pour ta cheat sheet.</div><div class="key-box"><div class="big">Un bon prompt utilisé une fois est une réussite. Un prompt-modèle réutilisé par toute la promo est une transmission.</div></div></div>
+<div class="card"><div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 17v5" /><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" /></svg></span>À retenir</div><ul class="checks cols"><li>Pars d'un prompt noté 4/5 ou 5/5 dans ton journal.</li><li>Variables en MAJUSCULES entre crochets, avec un nom explicite.</li><li>3 à 5 variables, seulement sur ce qui change vraiment.</li><li>Ce qui fait la qualité du résultat reste écrit en dur.</li><li>Fais-le tester par un camarade avant de l'ajouter à ta cheat sheet.</li></ul></div>
+<details class="sub" open><summary><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>Vérifier tes acquis<span class="tab-count">5 questions</span><span class="chev" aria-hidden="true"></span></summary><div class="pgrid"><div class="card">
+  <div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>QCM · Chapitre 3</div>
+  <div class="instruction-box"><strong class="title">Consigne</strong>Une seule bonne réponse par question. Réponds à tout, vérifie, puis lis les explications, y compris pour les bonnes réponses. Questions et options sont mélangées à chaque essai.</div>
+  <div id="qcm2"></div>
+  <div class="progress-wrap"><div class="progress-label"><span>Réponses données</span><span id="qtxt2">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="qfill2"></div></div></div>
+  <div class="actions-row">
+    <button class="btn btn-primary" data-qcheck="2"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 6 9 17l-5-5" /></svg></span>Vérifier</button>
+    <button class="btn btn-warning btn-reveal" data-qreveal="2"><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg></span>Révéler</button>
+    <button class="btn btn-ghost" data-qreset="2"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg></span>Recommencer</button>
+  </div>
+  <div class="result-panel" id="qres2"></div>
+  <div class="nav-bottom" style="margin-top:20px"><button class="btn btn-ghost" data-goto="c1"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Précédent</button><button class="btn btn-primary" data-goto="c3">Suite <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div>
+</div>
+</div></details>
+
+</div><div class="pager"><button class="pg" type="button" data-goto="c1"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> L’auto-critique</button><button class="pg primary" type="button" data-goto="c3">La soutenance <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div></section>
+<section class="panel" data-panel="c3" data-act="ch3" role="tabpanel"><div class="page-head t-lilac"><span class="icon-bg">04</span><span class="sum-text"><span class="sum-title">La soutenance</span><span class="sum-sub">6 temps, une démo fiable, des réponses honnêtes</span></span><span class="status"><span class="s-todo">À valider</span><span class="s-ok"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Validé</span></span></div><div class="pgrid">
+<div class="card half"><div class="section-title"><span class="icon-bg purple"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg></span><div><p class="eyebrow">L’idée</p>En deux mots</div></div><p class="lead">Quatre minutes pour montrer <strong>ce que tu as fait</strong>, <strong>comment</strong> tu l'as fait et <strong>ce que tu en retiens</strong>, puis deux minutes de questions. Une structure en 6 temps t'aide à garder le rythme.</p><p class="objectif"><strong>Objectif :</strong> Structurer ta présentation, préparer une démo fiable et savoir répondre aux questions de la promo.</p></div>
+<div class="card half t-lilac analogie"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg></span><div><p class="eyebrow">Pour s’en souvenir</p>L’analogie</div></div><p>Une <strong>bande-annonce de film</strong> : elle ne raconte pas tout, elle montre les meilleurs moments et donne envie d'en savoir plus. Ta démo, c'est la scène phare.</p></div>
+<div class="card"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg></span>Ta soutenance en 4 minutes</div><p class="lead">Quatre minutes, c'est court : chaque seconde compte. Une structure en 6 temps t'aide à ne rien oublier et à garder le rythme.</p><div class="route"><div class="route-step"><div class="n">0:00 · 30 s</div><div class="t">Contexte</div><div class="c">Outil, cas d'usage, pourquoi</div></div><div class="route-step"><div class="n">0:30 · 45 s</div><div class="t">Démarche</div><div class="c">Étapes, nombre de prompts, tournants</div></div><div class="route-step here"><div class="n">1:15 · 60 s</div><div class="t">Démo</div><div class="c">Ton livrable, en vrai</div></div><div class="route-step"><div class="n">2:15 · 45 s</div><div class="t">3 prompts clés</div><div class="c">Le pire, le déclic, le meilleur</div></div><div class="route-step"><div class="n">3:00 · 30 s</div><div class="t">Limites</div><div class="c">Ce que l'IA n'a pas su faire</div></div><div class="route-step"><div class="n">3:30 · 30 s</div><div class="t">Bilan</div><div class="c">Ce que tu retiens et conseilles</div></div></div><p>Puis <strong>2 minutes de questions</strong>. La démo est le cœur de ta présentation : c'est elle qui prend le plus de temps.</p></div>
+<div class="card half"><div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" /></svg></span>Préparer un support et une démo fiables</div><ul class="clean"><li><strong>6 ou 7 diapositives</strong> au maximum : une par temps, plus un titre.</li><li>Une idée par diapositive, peu de texte, des captures de ton journal.</li><li>Montre les <strong>vrais prompts</strong> : ils intéressent plus la promo que de longues explications.</li><li>Démo <strong>hors connexion</strong> : fichiers téléchargés, captures de secours.</li><li>Répète une fois à voix haute avec un chronomètre.</li></ul></div>
+<div class="card half"><div class="section-title"><span class="icon-bg green"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" /><path d="M7 11h10" /><path d="M7 15h6" /><path d="M7 7h8" /></svg></span>Répondre aux questions</div><ul class="clean"><li>Écoute la question jusqu'au bout et reformule-la si besoin.</li><li>Appuie-toi sur ton journal : « J'ai testé ça au prompt n° 9… ».</li><li>Tu ne sais pas ? Dis-le honnêtement et propose ce que tu testerais.</li><li>Argumente tes choix : pourquoi cet outil, pourquoi ce type de prompt.</li></ul></div>
+<div class="card"><div class="section-title"><span class="icon-bg purple"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><path d="M16 3.128a4 4 0 0 1 0 7.744" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><circle cx="9" cy="7" r="4" /></svg></span>Quand tu es dans le public</div><p>Pendant les soutenances de tes camarades, tu remplis une <strong>fiche de co-évaluation</strong> : pour chaque passage, <strong>un point fort</strong> et <strong>une question</strong>. Ton écoute et la qualité de tes retours comptent dans tes soft skills.</p><h3>Rappel des critères de la soutenance (20 %)</h3><div class="table-wrap"><table><tr><th>Critère</th><th>Ce qu'on regarde</th></tr><tr><td>Structure</td><td>Les 6 temps sont présents et dans l'ordre.</td></tr><tr><td>Démo</td><td>Le livrable est montré et fonctionne.</td></tr><tr><td>Qualité du rendu</td><td>Le livrable répond aux critères de réussite de ta fiche de cadrage.</td></tr><tr><td>Vocabulaire technique</td><td>Les bons termes : types de prompts, hallucination, biais…</td></tr><tr><td>Respect du temps</td><td>4 minutes, sans déborder.</td></tr></table></div></div>
+<div class="card"><div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 17v5" /><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" /></svg></span>À retenir</div><ul class="checks cols"><li>6 temps : contexte, démarche, démo, 3 prompts clés, limites, bilan.</li><li>La démo est le cœur : c'est elle qui prend le plus de temps.</li><li>Fichiers téléchargés et captures de secours : la démo marche hors connexion.</li><li>Tu ne sais pas répondre ? Dis-le et propose ce que tu testerais.</li><li>Dans le public : un point fort et une question pour chaque camarade.</li></ul></div>
+<details class="sub" open><summary><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" /></svg></span>Explorer<span class="tab-count">1</span><span class="chev" aria-hidden="true"></span></summary><div class="pgrid"><div class="card" data-explorer="x1">
+  <div class="section-title"><span class="icon-bg purple"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg></span>Explorateur · les 6 temps de la soutenance</div>
+  <p class="muted">Clique sur chaque notion pour afficher sa fiche.</p>
+  <div class="chain"></div>
+  <div class="concept-detail"></div>
+  <div class="progress-wrap"><div class="progress-label"><span>Notions consultées</span><span>0 / 6</span></div><div class="progress-track"><div class="progress-fill"></div></div></div>
+</div>
+</div></details>
+<details class="sub" open><summary><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>Vérifier tes acquis<span class="tab-count">5 questions</span><span class="chev" aria-hidden="true"></span></summary><div class="pgrid"><div class="card">
+  <div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>QCM · Chapitre 4</div>
+  <div class="instruction-box"><strong class="title">Consigne</strong>Une seule bonne réponse par question. Réponds à tout, vérifie, puis lis les explications, y compris pour les bonnes réponses. Questions et options sont mélangées à chaque essai.</div>
+  <div id="qcm3"></div>
+  <div class="progress-wrap"><div class="progress-label"><span>Réponses données</span><span id="qtxt3">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="qfill3"></div></div></div>
+  <div class="actions-row">
+    <button class="btn btn-primary" data-qcheck="3"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 6 9 17l-5-5" /></svg></span>Vérifier</button>
+    <button class="btn btn-warning btn-reveal" data-qreveal="3"><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg></span>Révéler</button>
+    <button class="btn btn-ghost" data-qreset="3"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg></span>Recommencer</button>
+  </div>
+  <div class="result-panel" id="qres3"></div>
+  <div class="nav-bottom" style="margin-top:20px"><button class="btn btn-ghost" data-goto="c2"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Précédent</button><button class="btn btn-primary" data-goto="syn">Suite <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div>
+</div>
+</div></details>
+
+</div><div class="pager"><button class="pg" type="button" data-goto="c2"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Le prompt-modèle</button><button class="pg primary" type="button" data-goto="syn">Synthèse <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div></section>
+<section class="panel" data-panel="syn" role="tabpanel"><div class="page-head t-rose"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528" /></svg></span><span class="sum-text"><span class="sum-title">Synthèse</span><span class="sum-sub">Tes scores, la check-list et ton auto-évaluation</span></span></div><div class="pgrid">
+<div class="card"><div class="section-title"><span class="icon-bg green"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 3v16a2 2 0 0 0 2 2h16" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg></span>Tes résultats aux QCM</div><div class="table-wrap score-table"><table><tr><th>Chapitre</th><th>Thème</th><th>Meilleur score</th></tr><tr><td>Chapitre 1</td><td><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /><circle cx="12" cy="12" r="3" /><path d="m16 16-1.9-1.9" /></svg></span>Erreurs fréquentes</td><td id="score0">—</td></tr><tr><td>Chapitre 2</td><td><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg></span>L'auto-critique</td><td id="score1">—</td></tr><tr><td>Chapitre 3</td><td><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z" /></svg></span>Le prompt-modèle</td><td id="score2">—</td></tr><tr><td>Chapitre 4</td><td><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg></span>La soutenance</td><td id="score3">—</td></tr><tr><td colspan="2"><strong>Total</strong></td><td id="scoreTotal">0 / 20</td></tr></table></div></div>
+<div class="card"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg></span>Le message clé du module</div><div class="key-box"><div class="big">Une IA est un outil puissant, pas un oracle. Ce qui fait la différence, c'est la précision de tes consignes, ton esprit critique et ta capacité à transmettre ce que tu as appris.</div></div><div class="objectif-box"><strong class="title">À la fin de cette séance, tu seras capable de :</strong><ul class="clean"><li>Repérer et corriger les erreurs les plus fréquentes du module ;</li><li>Faire critiquer un résultat par l'IA pour l'améliorer, sans lui déléguer ton jugement ;</li><li>Transformer ton meilleur prompt en prompt-modèle réutilisable par d'autres ;</li><li>Présenter ton projet en 4 minutes de façon claire et technique ;</li><li>Donner un retour utile à tes camarades et argumenter tes choix.</li></ul></div></div>
+<div class="card half"><div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /><path d="M12 22V12" /><polyline points="3.29 7 12 12 20.71 7" /><path d="m7.5 4.27 9 5.15" /></svg></span>Avant ta soutenance, vérifie que tu as</div><div class="checklist"><label><input type="checkbox"> Appliqué l'auto-critique au moins une fois sur ton livrable (et noté le résultat) ;</label><label><input type="checkbox"> Au moins un prompt-modèle dans ta cheat sheet finale ;</label><label><input type="checkbox"> Ton livrable final, vérifié, avec la mention de l'IA ;</label><label><input type="checkbox"> Ton support de présentation en 6 temps ;</label><label><input type="checkbox"> Ta démo prête hors connexion et une répétition chronométrée.</label></div></div>
+<div class="card half"><div class="section-title"><span class="icon-bg purple"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m11 17 2 2a1 1 0 1 0 3-3" /><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4" /><path d="m21 3 1 11h-2" /><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" /><path d="M3 4h8" /></svg></span>Auto-évaluation de tes soft skills</div><p class="muted">Coche ce qui te ressemble. Ces trois compétences comptent pour 30 % de ta note.</p><div class="checklist"><label><input type="checkbox"> <span><strong>Autonomie</strong> : j'ai déposé mes jalons à l'heure et avancé sans attendre.</span></label><label><input type="checkbox"> <span><strong>Esprit critique</strong> : j'ai vérifié les faits et repéré des biais.</span></label><label><input type="checkbox"> <span><strong>Communication</strong> : j'ai donné des retours utiles à mon trinôme et à la promo.</span></label></div><div class="objectif-box"><strong class="title">Et après ?</strong>Continue d'explorer : chaque nouvel outil se découvre avec la même méthode. Cadrer, prompter, douter, documenter, transmettre.</div></div>
+
+</div><div class="pager"><button class="pg" type="button" data-goto="c3"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> La soutenance</button><span></span></div></section>
+
+  </main>
+</div>
+<footer>Learning Lab' IA — Bachelor 1 — Séance 4 — Finaliser et transmettre — Théorie<br>Mode formateur : ajoute <code>?formateur</code> à l'adresse de la page.</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>window.__DATA__ = {"key": "s4-theorie", "families": {"f1": "Retour d'expérience", "f2": "Techniques avancées", "f3": "Transmission"}, "acts": ["ch0", "ch1", "ch2", "ch3"], "explorers": {"x1": {"items": [{"id": "1 · Contexte", "fam": "f3", "rows": [["Durée", "30 secondes"], ["Contenu", "Ton outil et sa famille, ton cas d'usage, pourquoi ce choix."], ["Piège", "Raconter toute ta vie : va droit au but."], ["Phrase d'accroche", "« J'ai voulu savoir si une IA pouvait créer l'affiche de notre soirée d'intégration. »"]]}, {"id": "2 · Démarche", "fam": "f3", "rows": [["Durée", "45 secondes"], ["Contenu", "Tes étapes, ton nombre de prompts, les tournants de ton expérience."], ["Piège", "Lister les prompts un par un."], ["Astuce", "Montre ton journal en une capture : nombre d'entrées, types, limites."]]}, {"id": "3 · Démo", "fam": "f3", "rows": [["Durée", "60 secondes"], ["Contenu", "Ton livrable final, montré en vrai."], ["Piège", "Lancer une génération en direct : le quota ou le réseau peut lâcher."], ["Astuce", "Fichiers téléchargés et captures de secours."]]}, {"id": "4 · 3 prompts clés", "fam": "f3", "rows": [["Durée", "45 secondes"], ["Contenu", "Le pire, celui du déclic, le meilleur."], ["Piège", "Ne montrer que le meilleur : on ne voit pas ta progression."], ["Astuce", "Mets les trois côte à côte avec leur résultat."]]}, {"id": "5 · Limites", "fam": "f3", "rows": [["Durée", "30 secondes"], ["Contenu", "Ce que l'IA n'a pas su faire, comment tu l'as repéré, comment tu as contourné."], ["Piège", "Dire « il n'y a eu aucun problème »."], ["Astuce", "Une limite bien analysée montre ton esprit critique."]]}, {"id": "6 · Bilan", "fam": "f3", "rows": [["Durée", "30 secondes"], ["Contenu", "Ce que tu retiens et ce que tu conseilles à la promo."], ["Piège", "Finir sur « voilà »."], ["Astuce", "Termine par ton meilleur conseil ou ton prompt-modèle."]]}]}}, "qcms": [[{"q": "Quel journal de bord est le plus crédible ?", "o": ["Celui qui ne montre que des réussites", "Celui qui documente aussi les échecs et explique les ajustements", "Celui qui ne contient que le résultat final", "Celui qui est le plus long"], "a": 1, "e": "Les échecs analysés prouvent ta démarche d'essais-erreurs."}, {"q": "« Fais une belle affiche » : quel est le problème ?", "o": ["Le prompt est trop long", "Il contient trop d'exemples", "Le prompt est trop vague : aucun sujet, style ou contrainte", "Il n'y a aucun problème"], "a": 2, "e": "Sans précision, l'IA improvise tout. « Belle » ne lui dit rien."}, {"q": "Une cheat sheet réussie…", "o": ["Reprend tout le journal de bord", "Ne contient que des conseils généraux", "Fait au moins 5 pages", "Contient des prompts qu'un camarade peut réutiliser sans poser de question"], "a": 3, "e": "Elle sert à transmettre : des prompts-modèles et des pièges concrets."}, {"q": "Ton livrable contient une image générée mais rien ne l'indique. Qu'as-tu oublié ?", "o": ["La mention de transparence", "Le quota", "Le prompt négatif", "Le few-shot"], "a": 0, "e": "Signaler l'usage de l'IA fait partie des règles du module."}, {"q": "Pourquoi préparer ta démo hors connexion ?", "o": ["Parce que l'IA est interdite en soutenance", "Pour ne pas dépendre du réseau ou d'un quota le jour J", "Pour générer plus vite", "Ce n'est pas utile"], "a": 1, "e": "Une démo fiable repose sur des fichiers téléchargés et des captures de secours."}], [{"q": "En quoi consiste l'auto-critique ?", "o": ["Supprimer les mauvais résultats", "Noter ses camarades", "Demander à l'IA d'évaluer son propre résultat avant de le corriger", "Critiquer le formateur"], "a": 2, "e": "L'IA cherche les faiblesses de son résultat, puis propose une correction."}, {"q": "Quel prompt d'auto-critique est le mieux formulé ?", "o": ["« C'est bien ? »", "« Améliore. »", "« Recommence. »", "« Relis ton texte comme un éditeur exigeant, liste 3 faiblesses, puis propose une version corrigée. »"], "a": 3, "e": "Un rôle exigeant, des critères, des faiblesses précises, puis une correction."}, {"q": "Avec un outil d'image qui n'accepte pas d'image en entrée, comment pratiquer l'auto-critique ?", "o": ["Décrire le résultat à une IA de texte et lui demander quoi changer dans le prompt", "Demander à l'outil s'il est fier de son image", "Générer 50 fois sans réfléchir", "C'est impossible"], "a": 0, "e": "L'IA de texte t'aide à reformuler le prompt à partir de ta description."}, {"q": "L'auto-critique remplace-t-elle ton jugement ?", "o": ["Oui, l'IA a toujours raison sur elle-même", "Non : l'IA peut se tromper, tu restes responsable de la décision", "Oui, si on lui demande poliment", "Non, car elle est interdite"], "a": 1, "e": "L'IA peut se tromper sur son propre travail : tu restes le juge final."}, {"q": "Quelle limite garder en tête pendant l'auto-critique ?", "o": ["Le droit d'auteur", "Le quota de caractères", "La complaisance : sans demande explicite de faiblesses, l'IA juge son travail trop favorablement", "Aucune"], "a": 2, "e": "C'est pourquoi on demande toujours des faiblesses, pas une validation."}], [{"q": "Qu'est-ce qu'un prompt-modèle ?", "o": ["Un prompt réutilisable avec des variables entre crochets à remplacer", "Le premier prompt du journal", "Un prompt payant", "Un prompt écrit par le formateur"], "a": 0, "e": "C'est un gabarit : les éléments qui changent deviennent des [VARIABLES]."}, {"q": "Dans « Affiche pour [ÉVÉNEMENT], style [STYLE] », que sont [ÉVÉNEMENT] et [STYLE] ?", "o": ["Des erreurs de syntaxe", "Des variables à remplacer", "Des mots-clés obligatoires pour l'IA", "Des balises HTML"], "a": 1, "e": "Chaque utilisateur remplace les variables par ses propres valeurs."}, {"q": "D'où part un bon prompt-modèle ?", "o": ["D'un prompt jamais testé", "D'une liste de mots au hasard", "D'un tutoriel vidéo", "D'un prompt qui a réellement fonctionné dans ton journal"], "a": 3, "e": "On généralise ce qui a fait ses preuves, pas une intuition."}, {"q": "Combien de variables est-il raisonnable de prévoir ?", "o": ["Une par mot", "Aucune", "Quelques-unes, sur ce qui change vraiment d'un usage à l'autre", "Au moins vingt"], "a": 2, "e": "3 à 5 variables : ce qui fait la qualité du résultat reste en dur."}, {"q": "Où vont tes prompts-modèles ?", "o": ["Dans ta cheat sheet", "Dans ta fiche de cadrage", "Dans ton profil", "Nulle part"], "a": 0, "e": "Ils rendent ta cheat sheet réutilisable par toute la promo."}], [{"q": "Combien de temps dure ta présentation ?", "o": ["10 minutes", "4 minutes, puis 2 minutes de questions", "30 secondes", "20 minutes"], "a": 1, "e": "4 minutes de présentation et de démo, puis 2 minutes d'échanges."}, {"q": "Dans quel ordre se suivent les 6 temps ?", "o": ["Bilan, démo, contexte, limites, démarche, prompts", "Démo seulement", "Contexte, démarche, démo, 3 prompts clés, limites, bilan", "Limites, bilan, contexte, démo, démarche, prompts"], "a": 2, "e": "On part du contexte, on montre la démarche et la démo, puis on prend du recul."}, {"q": "Quels « 3 prompts clés » montrer ?", "o": ["Les trois premiers", "Les trois plus longs", "Trois prompts pris au hasard", "Le pire, celui du déclic et le meilleur"], "a": 3, "e": "Ils racontent ta progression en trois étapes."}, {"q": "On te pose une question à laquelle tu ne sais pas répondre. Que fais-tu ?", "o": ["Je le dis honnêtement et je propose ce que je testerais", "J'invente une réponse", "J'ignore la question", "Je change de sujet"], "a": 0, "e": "L'honnêteté et une piste de test montrent ta démarche."}, {"q": "À quoi sert la fiche de co-évaluation ?", "o": ["À donner une note sur 20", "À noter un point fort et une question pour chaque camarade", "À critiquer le formateur", "À rien"], "a": 1, "e": "Elle structure ton écoute et nourrit les échanges."}]]};
+window.__ICONS__ = {"ok": "<span class=\"ico ti-mint\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><circle cx=\"12\" cy=\"12\" r=\"10\" /><path d=\"m16 9-5.5 5.5L8 12\" /></svg></span>", "ko": "<span class=\"ico ti-rose\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><circle cx=\"12\" cy=\"12\" r=\"10\" /><path d=\"m15 9-6 6\" /><path d=\"m9 9 6 6\" /></svg></span>", "unlock": "<span class=\"ico ti-mint\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /><path d=\"M7 11V7a5 5 0 0 1 9.9-1\" /></svg></span>", "clip": "<span class=\"ico ti-blue\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><path d=\"m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551\" /></svg></span>", "next": "<span class=\"ico ti-bare\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><path d=\"m15 10 5 5-5 5\" /><path d=\"M4 4v7a4 4 0 0 0 4 4h12\" /></svg></span>", "x": "<span class=\"ico ti-bare\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><path d=\"M18 6 6 18\" /><path d=\"m6 6 12 12\" /></svg></span>", "trash": "<span class=\"ico ti-rose\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><path d=\"M10 11v6\" /><path d=\"M14 11v6\" /><path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6\" /><path d=\"M3 6h18\" /><path d=\"M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\" /></svg></span>", "okTile": "<span class=\"ico ti-mint\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><circle cx=\"12\" cy=\"12\" r=\"10\" /><path d=\"m16 9-5.5 5.5L8 12\" /></svg></span>"};</script>
+<script>
+(function(){
+"use strict";
+const D = window.__DATA__ || {};
+const I = window.__ICONS__ || {};
+const params = new URLSearchParams(location.search);
+if (params.has('formateur') || location.hash === '#formateur') document.body.classList.add('formateur');
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const shuffle = a => { const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KEY = 'llia:' + (D.key || location.pathname);
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(KEY+':'+k); return v===null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(KEY+':'+k, JSON.stringify(v)); }catch(e){} }
+};
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2400); }
+function fallbackCopy(txt){ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); toast('Copié dans le presse-papiers');}catch(e){toast('Copie impossible : sélectionne le texte manuellement');} ta.remove(); }
+function copyText(txt){ if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(txt).then(()=>toast('Copié dans le presse-papiers')).catch(()=>fallbackCopy(txt)); } else fallbackCopy(txt); }
+function download(name, txt, type){ const blob=new Blob([txt],{type:(type||'text/markdown')+';charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); }
+function setProgress(fillId, txtId, done, total, suffix){ const p = total ? Math.round(done/total*100) : 0; const f=$('#'+fillId); if(f) f.style.width = p+'%'; const t=$('#'+txtId); if(t) t.textContent = done+' / '+total+(suffix||''); }
+function scoreMsg(pct){ if(pct>=90) return 'Excellent : les notions sont acquises.'; if(pct>=70) return 'Bon résultat. Relis les explications des erreurs pour consolider.'; if(pct>=50) return 'Des bases, mais plusieurs confusions. Relis le chapitre puis recommence.'; return 'Reprends le chapitre, puis recommence l\'activité.'; }
+
+/* Progression globale */
+const ACTS = D.acts || [];
+const done = new Set();
+const hooks = [];
+function markDone(act, quiet){
+  if(done.has(act)) return false;
+  done.add(act);
+  $$('.tab[data-act="'+act+'"]').forEach(t=>t.classList.add('done'));
+  $$('.panel[data-act="'+act+'"]').forEach(p=>p.classList.add('is-done'));
+  const n = done.size;
+  updGlobal(n);
+  if(!quiet) toast(n===ACTS.length ? 'Toutes les activités sont validées, bravo !' : 'Activité validée');
+  hooks.forEach(h=>h(act));
+  return true;
+}
+function unmarkDone(act){
+  if(!done.has(act)) return;
+  done.delete(act);
+  $$('.tab[data-act="'+act+'"]').forEach(t=>t.classList.remove('done'));
+  $$('.panel[data-act="'+act+'"]').forEach(p=>p.classList.remove('is-done'));
+  updGlobal(done.size);
+}
+function updGlobal(n){
+  const gf=$('#globalFill'); if(gf) gf.style.width = (ACTS.length?Math.round(n/ACTS.length*100):0)+'%';
+  const gn=$('#globalNum'); if(gn) gn.textContent = n;
+  const gb=$('#globalBar'); if(gb) gb.setAttribute('aria-valuenow', n);
+}
+
+/* Onglets */
+function openTab(i, noScroll){
+  $$('.tab').forEach(t=>{ const on=t.dataset.tab==i; t.classList.toggle('active', on); t.setAttribute('aria-selected', on?'true':'false'); });
+  $$('.panel').forEach(p=>p.classList.toggle('active', p.dataset.panel==i));
+  store.set('tab', i);
+  if(noScroll) return;
+  const calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const target = window.matchMedia('(max-width:1000px)').matches ? $('.sidebar') : $('.layout');
+  if(target) target.scrollIntoView({behavior: calm?'auto':'smooth', block:'start'});
+}
+function subsOf(){ return $$('.panel.active details.sub'); }
+const ex=$('#expandAll'), co=$('#collapseAll');
+if(ex) ex.addEventListener('click',()=>subsOf().forEach(d=>d.open=true));
+if(co) co.addEventListener('click',()=>subsOf().forEach(d=>d.open=false));
+$$('.tab').forEach(t=>t.addEventListener('click',()=>openTab(t.dataset.tab)));
+$$('[data-goto]').forEach(b=>b.addEventListener('click',()=>openTab(b.dataset.goto)));
+(function(){ const h=(location.hash||'').slice(1); const ids=$$('.tab').map(t=>t.dataset.tab); const last=store.get('tab',null);
+  const start = ids.includes(h) ? h : (ids.includes(last) ? last : ids[0]); if(start) openTab(start, true); })();
+$$('[data-copy]').forEach(b=>b.addEventListener('click',()=>{ const src=document.getElementById(b.dataset.copy); if(src) copyText(src.textContent); }));
+$$('[data-reveal]').forEach(b=>b.addEventListener('click',()=>{ const c=document.getElementById(b.dataset.reveal); if(c) c.classList.toggle('shown'); }));
+
+/* Explorateurs */
+$$('[data-explorer]').forEach(box=>{
+  const E = (D.explorers||{})[box.dataset.explorer]; if(!E) return; const seen=new Set();
+  const chain=$('.chain',box), detail=$('.concept-detail',box);
+  E.items.forEach((k,i)=>{ const b=document.createElement('button'); b.className='chain-node'; b.textContent=k.id; b.dataset.i=i; b.addEventListener('click',()=>show(i)); chain.appendChild(b); });
+  function show(i){
+    const k=E.items[i]; seen.add(i);
+    $$('.chain-node',box).forEach(n=>{ n.classList.toggle('active', n.dataset.i==i); if(seen.has(+n.dataset.i)) n.classList.add('seen'); });
+    const tag = k.fam ? '<span class="famille-tag '+k.fam+'">'+esc((D.families||{})[k.fam]||'')+'</span>' : '';
+    detail.innerHTML='<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap"><span class="term-item">'+esc(k.id)+'</span>'+tag+'</div>'+
+      k.rows.map(r=>'<div class="row"><span class="k">'+esc(r[0])+'</span><span>'+esc(r[1])+'</span></div>').join('');
+    const f=$('.progress-fill',box), t=$('.progress-label span:last-child',box);
+    f.style.width=Math.round(seen.size/E.items.length*100)+'%'; t.textContent=seen.size+' / '+E.items.length;
+  }
+  show(0);
+});
+
+/* QCM de chapitre */
+if(D.qcms){
+  const qState={}, scores={}, L=['A','B','C','D','E'];
+  function renderQCM(ci){
+    const box=$('#qcm'+ci); box.innerHTML='';
+    const qs = shuffle(D.qcms[ci]).map(q=>({q:q.q,e:q.e,opts:shuffle(q.o.map((t,i)=>({t,good:i===q.a})))}));
+    qState[ci]={qs};
+    qs.forEach((q,qi)=>{
+      const d=document.createElement('div'); d.className='qcm-q';
+      d.innerHTML='<div class="qt"><span class="q-num">Q'+(qi+1)+'</span>'+esc(q.q)+'</div><div class="qcm-opts" role="radiogroup">'+
+        q.opts.map((o,oi)=>'<button type="button" class="qcm-opt" role="radio" aria-checked="false" data-oi="'+oi+'"><span class="l">'+L[oi]+'</span><span>'+esc(o.t)+'</span></button>').join('')+'</div><div class="expl"></div>';
+      $$('.qcm-opt',d).forEach(b=>b.addEventListener('click',()=>{
+        if(d.classList.contains('checked')) return;
+        $$('.qcm-opt',d).forEach(x=>{x.classList.remove('sel');x.setAttribute('aria-checked','false');});
+        b.classList.add('sel'); b.setAttribute('aria-checked','true'); d.dataset.ans=b.dataset.oi; updQ(ci);
+      }));
+      box.appendChild(d);
+    });
+    $('#qres'+ci).classList.remove('show'); updQ(ci);
+  }
+  function updQ(ci){ const rows=$$('#qcm'+ci+' .qcm-q'); setProgress('qfill'+ci,'qtxt'+ci,rows.filter(r=>r.dataset.ans!==undefined).length,rows.length); }
+  function checkQCM(ci, silent){
+    const rows=$$('#qcm'+ci+' .qcm-q');
+    if(!silent && rows.some(r=>r.dataset.ans===undefined)){ toast('Réponds à toutes les questions avant de vérifier.'); return; }
+    let ok=0;
+    rows.forEach((r,qi)=>{
+      const q=qState[ci].qs[qi]; const ans=r.dataset.ans===undefined?-1:+r.dataset.ans;
+      const gi=q.opts.findIndex(o=>o.good); const good=ans===gi; if(good) ok++;
+      r.classList.remove('correct','wrong'); r.classList.add('checked', good?'correct':'wrong');
+      $$('.qcm-opt',r).forEach((b,oi)=>{ b.classList.toggle('good',oi===gi); b.classList.toggle('bad',oi===ans&&!good); });
+      $('.expl',r).innerHTML=(good?I.ok:I.ko+'Bonne réponse : <strong>'+L[gi]+'</strong>. ')+esc(q.e);
+    });
+    $('#qres'+ci).innerHTML='<div class="score">'+ok+' / '+rows.length+'</div><div class="msg">'+scoreMsg(Math.round(ok/rows.length*100))+'</div>';
+    $('#qres'+ci).classList.add('show');
+    if(!silent){ scores[ci]=Math.max(scores[ci]||0,ok); updScores(); markDone('ch'+ci); }
+  }
+  function revealQCM(ci){
+    $$('#qcm'+ci+' .qcm-q').forEach((r,qi)=>{ const gi=qState[ci].qs[qi].opts.findIndex(o=>o.good); r.dataset.ans=gi; $$('.qcm-opt',r).forEach((b,oi)=>b.classList.toggle('sel',oi===gi)); });
+    updQ(ci); checkQCM(ci,true);
+  }
+  function updScores(){
+    let tot=0,max=0;
+    D.qcms.forEach((q,ci)=>{ const c=$('#score'+ci); if(c && scores[ci]!==undefined){ c.textContent=scores[ci]+' / '+q.length; tot+=scores[ci]; } max+=q.length; });
+    const st=$('#scoreTotal'); if(st) st.textContent=tot+' / '+max;
+  }
+  D.qcms.forEach((_,ci)=>renderQCM(ci));
+  $$('[data-qcheck]').forEach(b=>b.addEventListener('click',()=>checkQCM(+b.dataset.qcheck)));
+  $$('[data-qreveal]').forEach(b=>b.addEventListener('click',()=>revealQCM(+b.dataset.qreveal)));
+  $$('[data-qreset]').forEach(b=>b.addEventListener('click',()=>renderQCM(+b.dataset.qreset)));
+}
+
+/* Cas 1 — correspondance */
+if(D.terms && $('#c1Terms')){
+  const RSIZE=10; let c1=null;
+  function initCas1(){ const order=shuffle(D.terms); const rounds=[]; for(let i=0;i<order.length;i+=RSIZE) rounds.push(order.slice(i,i+RSIZE)); c1={rounds,r:0,scores:[],pairs:{},active:null,checked:false}; $('#c1Result').classList.remove('show'); renderRound(); }
+  function renderRound(){
+    const R=c1.rounds[c1.r]; c1.pairs={}; c1.active=null; c1.checked=false; const defOrder=shuffle(R.map((_,i)=>i));
+    $('#c1Rounds').innerHTML=c1.rounds.map((_,i)=>'<span class="round-pill '+(i===c1.r?'cur':(i<c1.r?'ok':''))+'">Round '+(i+1)+(c1.scores[i]!==undefined?' · '+c1.scores[i]+'/'+c1.rounds[i].length:'')+'</span>').join('');
+    const tc=$('#c1Terms'), dc=$('#c1Defs'); tc.innerHTML='<h4>Termes</h4>'; dc.innerHTML='<h4>Définitions</h4>';
+    R.forEach((t,i)=>{ const b=document.createElement('button'); b.className='m-term'; b.dataset.i=i; b.innerHTML='<span>'+esc(t.t)+'</span><span class="pair-badge">'+(i+1)+'</span>'; b.addEventListener('click',()=>pickTerm(i)); tc.appendChild(b); });
+    defOrder.forEach(di=>{ const b=document.createElement('button'); b.className='m-def'; b.dataset.d=di; b.innerHTML='<span class="pair-badge">·</span><span>'+esc(R[di].d)+'</span>'; b.addEventListener('click',()=>pickDef(di)); dc.appendChild(b); });
+    $('#c1Next').style.display='none'; $('#c1Check').disabled=false; paintPairs();
+  }
+  function pickTerm(i){ if(c1.checked) return; c1.active = c1.active===i ? null : i; paintPairs(); }
+  function pickDef(di){
+    if(c1.checked) return;
+    if(c1.active===null){ const owner=Object.keys(c1.pairs).find(k=>c1.pairs[k]===di); if(owner!==undefined){ delete c1.pairs[owner]; paintPairs(); } else toast('Sélectionne d\'abord un terme à gauche.'); return; }
+    Object.keys(c1.pairs).forEach(k=>{ if(c1.pairs[k]===di) delete c1.pairs[k]; });
+    c1.pairs[c1.active]=di; c1.active=null; paintPairs();
+  }
+  function paintPairs(){
+    $$('#c1Terms .m-term').forEach(b=>{ const i=+b.dataset.i; b.classList.toggle('active',c1.active===i); b.classList.toggle('paired',c1.pairs[i]!==undefined); });
+    $$('#c1Defs .m-def').forEach(b=>{ const di=+b.dataset.d; const owner=Object.keys(c1.pairs).find(k=>c1.pairs[k]===di); b.classList.toggle('paired',owner!==undefined); $('.pair-badge',b).textContent= owner!==undefined ? (+owner+1) : '·'; });
+    setProgress('c1Fill','c1Txt',Object.keys(c1.pairs).length,c1.rounds[c1.r].length,' associations');
+  }
+  function checkRound(silent){
+    const R=c1.rounds[c1.r];
+    if(!silent && Object.keys(c1.pairs).length<R.length){ toast('Associe les '+R.length+' termes avant de vérifier.'); return; }
+    let ok=0;
+    $$('#c1Terms .m-term').forEach(b=>{ const i=+b.dataset.i; const g=c1.pairs[i]===i; if(g) ok++; b.classList.remove('active'); b.classList.add(g?'good':'bad'); });
+    $$('#c1Defs .m-def').forEach(b=>{ const di=+b.dataset.d; const owner=Object.keys(c1.pairs).find(k=>c1.pairs[k]===di); const g= owner!==undefined && +owner===di; b.classList.add(g?'good':'bad'); if(!g) $('.pair-badge',b).textContent='→'+(di+1); });
+    c1.checked=true; c1.scores[c1.r]=ok; $('#c1Check').disabled=true;
+    const last = c1.r===c1.rounds.length-1;
+    const tot=c1.scores.reduce((a,b)=>a+b,0), max=c1.rounds.slice(0,c1.r+1).reduce((a,r)=>a+r.length,0);
+    $('#c1Result').innerHTML='<div class="score">'+ok+' / '+R.length+'</div><div class="msg">Round '+(c1.r+1)+' sur '+c1.rounds.length+'. Les définitions en rouge indiquent le numéro du bon terme. '+(last?'<br><strong>Score total : '+tot+' / '+max+'</strong>. '+scoreMsg(Math.round(tot/max*100)):'Score cumulé : '+tot+' / '+max+'.')+'</div>';
+    $('#c1Result').classList.add('show');
+    if(last){ if(!silent) markDone('cas1'); } else $('#c1Next').style.display='inline-flex';
+  }
+  $('#c1Check').addEventListener('click',()=>checkRound(false));
+  $('#c1Next').addEventListener('click',()=>{ c1.r++; $('#c1Result').classList.remove('show'); renderRound(); });
+  $('#c1Reveal').addEventListener('click',()=>{ if(c1.checked) return; c1.rounds[c1.r].forEach((_,i)=>c1.pairs[i]=i); paintPairs(); checkRound(true); });
+  $('#c1Reset').addEventListener('click',initCas1);
+  initCas1();
+}
+
+/* Cas 2 — situations + intruse */
+if(D.cas2 && $('#c2Box')){
+  let c2=[];
+  function initCas2(){
+    c2 = shuffle(D.cas2).map(g=>({g, choices:shuffle(g.choices), sits:shuffle(g.situations)}));
+    const box=$('#c2Box'); box.innerHTML='';
+    c2.forEach((G,gi)=>{
+      const d=document.createElement('div'); d.className='group';
+      d.innerHTML='<div class="group-head"><strong><span class="q-num">G'+(gi+1)+'</span>Groupe '+(gi+1)+'</strong><span class="famille-tag f2">4 situations · 1 intruse</span></div>'+
+        G.sits.map((s,si)=>'<button type="button" class="sit" data-si="'+si+'"><span class="tag">S'+(si+1)+'</span><span>'+esc(s.s)+'</span></button>').join('')+
+        '<div class="g-label">1 · Quelle notion illustrent la majorité de ces situations ?</div><div class="choice-row">'+
+        G.choices.map((c,ci)=>'<button type="button" class="choice" data-ci="'+ci+'">'+esc(c)+'</button>').join('')+'</div>'+
+        '<div class="g-label">2 · Clique sur la situation intruse ci-dessus.</div><div class="expl"></div>';
+      $$('.choice',d).forEach(b=>b.addEventListener('click',()=>{ if(d.classList.contains('checked')) return; $$('.choice',d).forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); d.dataset.ch=b.dataset.ci; upd2(); }));
+      $$('.sit',d).forEach(b=>b.addEventListener('click',()=>{ if(d.classList.contains('checked')) return; $$('.sit',d).forEach(x=>{x.classList.remove('sel');$('.tag',x).textContent='S'+(+x.dataset.si+1);}); b.classList.add('sel'); $('.tag',b).textContent='Intruse ?'; d.dataset.si=b.dataset.si; upd2(); }));
+      box.appendChild(d);
+    });
+    $('#c2Result').classList.remove('show'); upd2();
+  }
+  function upd2(){ const gs=$$('#c2Box .group'); let n=0; gs.forEach(g=>{ if(g.dataset.ch!==undefined) n++; if(g.dataset.si!==undefined) n++; }); setProgress('c2Fill','c2Txt',n,gs.length*2,' réponses'); }
+  function check2(silent){
+    const gs=$$('#c2Box .group');
+    if(!silent && gs.some(g=>g.dataset.ch===undefined||g.dataset.si===undefined)){ toast('Choisis une notion et une intruse pour chaque groupe.'); return; }
+    let ok=0;
+    gs.forEach((d,gi)=>{
+      const G=c2[gi]; const goodCi=G.choices.indexOf(G.g.notion); const goodSi=G.sits.findIndex(s=>s.intruse);
+      const a=+d.dataset.ch===goodCi, b=+d.dataset.si===goodSi; ok+=(a?1:0)+(b?1:0);
+      $$('.choice',d).forEach((x,ci)=>{ x.classList.toggle('good',ci===goodCi); x.classList.toggle('bad',ci===+d.dataset.ch&&!a); });
+      $$('.sit',d).forEach((x,si)=>{ x.classList.remove('sel'); x.classList.toggle('good',si===goodSi); x.classList.toggle('bad',si===+d.dataset.si&&!b); $('.tag',x).textContent= si===goodSi?'Intruse':(si===+d.dataset.si&&!b?'Pas l\'intruse':'S'+(si+1)); });
+      d.classList.remove('correct','wrong','half'); d.classList.add('checked', a&&b?'correct':(a||b?'half':'wrong'));
+      $('.expl',d).innerHTML=(a?I.ok:I.ko)+'Notion : <strong>'+esc(G.g.notion)+'</strong> · '+(b?I.ok:I.ko)+'Intruse : <strong>S'+(goodSi+1)+'</strong><br>'+esc(G.g.e);
+    });
+    const max=gs.length*2;
+    $('#c2Result').innerHTML='<div class="score">'+ok+' / '+max+'</div><div class="msg">1 point par notion identifiée, 1 point par intruse repérée. '+scoreMsg(Math.round(ok/max*100))+'</div>';
+    $('#c2Result').classList.add('show');
+    if(!silent) markDone('cas2');
+  }
+  $('#c2Check').addEventListener('click',()=>check2(false));
+  $('#c2Reveal').addEventListener('click',()=>{ $$('#c2Box .group').forEach((d,gi)=>{ const G=c2[gi]; d.dataset.ch=G.choices.indexOf(G.g.notion); d.dataset.si=G.sits.findIndex(s=>s.intruse); }); upd2(); check2(true); });
+  $('#c2Reset').addEventListener('click',initCas2);
+  initCas2();
+}
+
+/* Cas 3 — vrai / faux */
+if(D.cas3 && $('#vfQuiz')){
+  let vfOrder=[];
+  function renderVF(){
+    vfOrder=shuffle(D.cas3); const box=$('#vfQuiz'); box.innerHTML='';
+    vfOrder.forEach((it,i)=>{
+      const r=document.createElement('div'); r.className='vf-row';
+      r.innerHTML='<div class="vf-q"><span class="q-num">'+String(i+1).padStart(2,'0')+'</span>'+esc(it.q)+'</div><div class="vf-btns"><button class="vf-btn" data-v="true">Vrai</button><button class="vf-btn" data-v="false">Faux</button></div><div class="expl"></div>';
+      $$('.vf-btn',r).forEach(b=>b.addEventListener('click',()=>{ if(r.classList.contains('checked')) return; $$('.vf-btn',r).forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); r.dataset.ans=b.dataset.v; updateVF(); }));
+      box.appendChild(r);
+    });
+    $('#vfResult').classList.remove('show'); updateVF();
+  }
+  function updateVF(){ const rows=$$('#vfQuiz .vf-row'); setProgress('vfFill','vfTxt',rows.filter(r=>r.dataset.ans).length,rows.length); }
+  function checkVF(silent){
+    const rows=$$('#vfQuiz .vf-row');
+    if(!silent && rows.some(r=>!r.dataset.ans)){ toast('Réponds à toutes les affirmations avant de vérifier.'); return; }
+    let ok=0;
+    rows.forEach((r,i)=>{ const it=vfOrder[i]; const good=(r.dataset.ans==='true')===it.a; if(good) ok++; r.classList.remove('correct','wrong'); r.classList.add('checked',good?'correct':'wrong'); $('.expl',r).innerHTML=(good?I.ok:I.ko)+'<strong>'+(it.a?'Vrai':'Faux')+'.</strong> '+esc(it.e); });
+    $('#vfResult').innerHTML='<div class="score">'+ok+' / '+rows.length+'</div><div class="msg">'+scoreMsg(Math.round(ok/rows.length*100))+'</div>';
+    $('#vfResult').classList.add('show');
+    if(!silent) markDone('cas3');
+  }
+  $('#vfCheck').addEventListener('click',()=>checkVF(false));
+  $('#vfReveal').addEventListener('click',()=>{ $$('#vfQuiz .vf-row').forEach((r,i)=>{ r.dataset.ans=String(vfOrder[i].a); $$('.vf-btn',r).forEach(b=>b.classList.toggle('sel',b.dataset.v===r.dataset.ans)); }); updateVF(); checkVF(true); });
+  $('#vfReset').addEventListener('click',renderVF);
+  renderVF();
+}
+
+/* Générateurs Markdown */
+const generated = new Set();
+if(D.generators){
+  D.generators.forEach((G,gi)=>{
+    const inputs=()=>$$('[data-gen="'+gi+'"]');
+    inputs().forEach(f=>{ const v=store.get('g'+gi+'_'+f.dataset.field, ''); if(v) f.value=v; f.addEventListener('input',()=>store.set('g'+gi+'_'+f.dataset.field, f.value)); });
+    const v=id=>{ const el=$('#g'+gi+'_'+id); return el?el.value.trim():''; };
+    function genMd(){
+      let md='# '+G.heading.replace('{name}', v('name')||G.fallback||'Projet')+'\n';
+      G.fields.forEach(f=>{
+        if(f.id==='name') return;
+        let val=v(f.id);
+        if(f.list) val=val.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>'- '+s.replace(/^[-*•]\s*/,'')).join('\n');
+        md+='\n## '+f.label.replace(/\s*\(.*?\)\s*$/,'')+'\n'+(val||'_À compléter_')+'\n';
+      });
+      return md;
+    }
+    $('#gGen'+gi).addEventListener('click',()=>{
+      const filled=inputs().filter(f=>f.value.trim().length>=2).length, need=Math.ceil(inputs().length*0.6);
+      if(filled<need){ toast('Complète au moins '+need+' champs ('+filled+' / '+inputs().length+').'); return; }
+      $('#gOut'+gi).textContent=genMd(); $('#gWrap'+gi).style.display='block'; generated.add(gi); hooks.forEach(h=>h('gen'+gi));
+    });
+    $('#gCopy'+gi).addEventListener('click',()=>copyText(genMd()));
+    $('#gDl'+gi).addEventListener('click',()=>download(G.filename,genMd()));
+    $('#gReset'+gi).addEventListener('click',()=>{ inputs().forEach(f=>{f.value=''; store.set('g'+gi+'_'+f.dataset.field,'');}); $('#gWrap'+gi).style.display='none'; generated.delete(gi); hooks.forEach(h=>h('gen'+gi)); });
+  });
+}
+
+/* Atelier fil rouge (support pratique) */
+if($('#atSteps')){
+  function updAtelier(){
+    const s=$$('#atSteps input').filter(c=>c.checked).length, c=$$('#atCheck input').filter(c=>c.checked).length;
+    const tot=$$('#atSteps input').length+$$('#atCheck input').length+(D.generators||[]).length;
+    const n=s+c+generated.size; setProgress('atFill','atTxt',n,tot);
+    if(n===tot) markDone('atelier');
+  }
+  $$('#atSteps input, #atCheck input').forEach(c=>c.addEventListener('change',updAtelier));
+  hooks.push(a=>{ if(String(a).startsWith('gen')) updAtelier(); });
+  updAtelier();
+}
+
+/* Checklists persistantes et activités cochées (guide d'autonomie) */
+$$('[data-persist]').forEach(cb=>{ cb.checked = !!store.get('cb_'+cb.dataset.persist, false); cb.addEventListener('change',()=>store.set('cb_'+cb.dataset.persist, cb.checked)); });
+$$('[data-act-steps]').forEach(box=>{
+  const act=box.dataset.actSteps; const cbs=$$('input[type=checkbox]',box);
+  const fillId=box.dataset.fill, txtId=box.dataset.txt;
+  function upd(quiet){ const n=cbs.filter(c=>c.checked).length; setProgress(fillId,txtId,n,cbs.length,' étapes'); if(n===cbs.length) markDone(act, quiet); else unmarkDone(act); }
+  cbs.forEach(c=>c.addEventListener('change',()=>upd(false)));
+  upd(true);
+});
+
+/* Glossaire verrouillé */
+if($('#gloss')){
+  let glossFilter='all';
+  function renderGloss(){
+    const items=D.terms.slice().sort((a,b)=>a.t.localeCompare(b.t,'fr')).filter(t=>glossFilter==='all'||t.f===glossFilter);
+    $('#gloss').innerHTML=items.map(g=>'<div class="gloss-item"><div class="gt"><span class="term-item">'+esc(g.t)+'</span><span class="famille-tag '+g.f+'">'+esc(D.families[g.f])+'</span></div><div>'+esc(g.d)+'</div></div>').join('');
+  }
+  function unlockGloss(){ $('#glossLocked').style.display='none'; $('#glossOpen').style.display='block'; const t=$('.tab[data-tab="gl"] .lock-mark'); if(t) t.innerHTML=I.unlock; renderGloss(); }
+  hooks.push(act=>{
+    const p=$('.lock-pill[data-lock="'+act+'"]'); if(p){ p.classList.add('ok'); const ic=$('.ico',p); if(ic) ic.outerHTML=I.okTile; }
+    if(['cas1','cas2','cas3'].every(a=>done.has(a))){ unlockGloss(); toast('Glossaire débloqué !'); }
+  });
+  $$('#glossFilters button').forEach(b=>b.addEventListener('click',()=>{ glossFilter=b.dataset.f; $$('#glossFilters button').forEach(x=>x.classList.toggle('on',x===b)); renderGloss(); }));
+  $('#glossForce').addEventListener('click',unlockGloss);
+}
+
+/* Constructeur de prompt pilier par pilier */
+if($('#pb')){
+  const ids=['ctx','role','obj','cons','ex'], labels=['Contexte','Rôle','Objectif','Contraintes','Exemple'];
+  const f=ids.map(i=>$('#pb_'+i));
+  function upd(){ const parts=[]; let n=0; f.forEach((el,i)=>{ const v=el.value.trim(); if(v){ n++; parts.push(labels[i]+' : '+v); } }); $('#pbOut').textContent=parts.length?parts.join('\n'):'Remplis les piliers pour voir ton prompt apparaître ici.'; setProgress('pbFill','pbTxt',n,5,' piliers'); }
+  f.forEach((el,i)=>{ el.value=store.get('pb_'+ids[i],''); el.addEventListener('input',()=>{ store.set('pb_'+ids[i],el.value); upd(); }); });
+  $('#pbCopy').addEventListener('click',()=>{ if(!f.some(x=>x.value.trim())){ toast('Remplis au moins un pilier.'); return; } copyText($('#pbOut').textContent); });
+  $('#pbReset').addEventListener('click',()=>{ f.forEach((el,i)=>{ el.value=''; store.set('pb_'+ids[i],''); }); upd(); });
+  upd();
+}
+
+/* Mini-TP : du mauvais prompt au prompt structuré */
+if($('#mtpChoices') && D.weakPrompts){
+  const W=D.weakPrompts, txts=['mtpMine','mtpDiff'].map(id=>$('#'+id)), cbs=$$('#mtpCheck input');
+  function show(i){ store.set('mtp_cur',i); $$('#mtpChoices button').forEach((b,j)=>b.classList.toggle('on',j===i)); $('#mtpWeak').textContent=W[i].p; $('#mtpWhy').innerHTML='<strong>Pourquoi il est faible :</strong> '+esc(W[i].why); }
+  function upd(quiet){ const tot=cbs.length+txts.length; const n=cbs.filter(c=>c.checked).length+txts.filter(t=>t.value.trim().length>=10).length; setProgress('mtpFill','mtpTxt',n,tot); if(ACTS.includes('minitp')){ if(n===tot) markDone('minitp',quiet); else unmarkDone('minitp'); } }
+  $$('#mtpChoices button').forEach(b=>b.addEventListener('click',()=>show(+b.dataset.i)));
+  txts.forEach(t=>{ t.value=store.get(t.id,''); t.addEventListener('input',()=>{ store.set(t.id,t.value); upd(); }); });
+  cbs.forEach(c=>c.addEventListener('change',()=>upd()));
+  $('#mtpReset').addEventListener('click',()=>{ txts.forEach(t=>{ t.value=''; store.set(t.id,''); }); cbs.forEach(c=>{ c.checked=false; c.dispatchEvent(new Event('change')); }); show(0); upd(); });
+  show(store.get('mtp_cur',0)); upd(true);
+}
+
+/* Journal de bord (guide d'autonomie) */
+if($('#jForm')){
+  let entries = store.get('journal', []);
+  const LIM = D.limitTypes || [];
+  function save(){ store.set('journal', entries); }
+  function stats(){
+    const types=new Set(entries.map(x=>x.type).filter(t=>t && t!=='Crash-test'));
+    const lim=entries.filter(x=>x.limite).length;
+    return {n:entries.length, types:types.size, lim};
+  }
+  function render(){
+    const tb=$('#jBody');
+    if(!entries.length){ tb.innerHTML='<tr><td colspan="7" class="muted">Aucune entrée pour l\'instant. Ton premier prompt t\'attend !</td></tr>'; }
+    else tb.innerHTML=entries.map((x,i)=>'<tr><td class="mono">'+(i+1)+'</td><td class="p">'+esc(x.prompt)+'</td><td>'+esc(x.type)+(x.limite?'<br><span class="famille-tag f3">'+esc(x.limite)+'</span>':'')+'</td><td>'+esc(x.result)+(x.capture?'<br><span class="muted">'+I.clip+esc(x.capture)+'</span>':'')+'</td><td class="mono">'+esc(x.note)+'/5</td><td>'+esc(x.analyse)+(x.next?'<br><span class="muted">'+I.next+esc(x.next)+'</span>':'')+'</td><td><button class="btn btn-ghost btn-sm" data-del="'+i+'" aria-label="Supprimer l\'entrée '+(i+1)+'">'+I.x+'</button></td></tr>').join('');
+    $$('[data-del]',tb).forEach(b=>b.addEventListener('click',()=>{ entries.splice(+b.dataset.del,1); save(); render(); }));
+    const s=stats();
+    $$('[data-stat]').forEach(el=>{
+      const k=el.dataset.stat, goal=+(el.dataset.goal||0); const v=s[k];
+      const vEl=$('.v',el)||el; vEl.textContent = goal ? v+' / '+goal : v;
+      el.classList.toggle('ok', goal ? v>=goal : false);
+    });
+    const nx=$('#jNum'); if(nx) nx.textContent='Entrée n° '+(entries.length+1);
+  }
+  $('#jAdd').addEventListener('click',()=>{
+    const g=id=>$('#'+id).value.trim();
+    if(!g('jPrompt')||!g('jResult')){ toast('Indique au moins le prompt et le résultat obtenu.'); return; }
+    entries.push({prompt:g('jPrompt'),type:g('jType'),result:g('jResult'),capture:g('jCapture'),note:g('jNote'),analyse:g('jAnalyse'),next:g('jNext'),limite:$('#jIsLim').checked?g('jLimType'):'' ,date:new Date().toISOString()});
+    save(); render();
+    ['jPrompt','jResult','jCapture','jAnalyse','jNext'].forEach(id=>$('#'+id).value=''); $('#jIsLim').checked=false; $('#jLimWrap').style.display='none';
+    toast('Entrée ajoutée au journal');
+  });
+  $('#jIsLim').addEventListener('change',e=>{ $('#jLimWrap').style.display=e.target.checked?'block':'none'; });
+  function toMd(){
+    const nom=($('#jName')&&$('#jName').value.trim())||'';
+    let md='# Journal de bord'+(nom?' — '+nom:'')+'\n\n';
+    const s=stats(); md+='- Entrées : '+s.n+'\n- Types de prompts différents : '+s.types+'\n- Limites documentées : '+s.lim+'\n\n';
+    md+='| N° | Prompt exact | Type | Résultat | Note | Analyse | Prochaine étape |\n|---|---|---|---|---|---|---|\n';
+    const c=t=>String(t||'').replace(/\|/g,'\\|').replace(/\n/g,' ');
+    entries.forEach((x,i)=>{ md+='| '+(i+1)+' | '+c(x.prompt)+' | '+c(x.type)+(x.limite?' (limite : '+c(x.limite)+')':'')+' | '+c(x.result)+(x.capture?' ['+c(x.capture)+']':'')+' | '+c(x.note)+'/5 | '+c(x.analyse)+' | '+c(x.next)+' |\n'; });
+    return md;
+  }
+  function toCsv(){
+    const q=t=>'"'+String(t||'').replace(/"/g,'""')+'"';
+    let csv='numero;prompt;type;limite;resultat;capture;note;analyse;prochaine_etape;date\n';
+    entries.forEach((x,i)=>{ csv+=[i+1,q(x.prompt),q(x.type),q(x.limite),q(x.result),q(x.capture),x.note,q(x.analyse),q(x.next),q(x.date)].join(';')+'\n'; });
+    return '﻿'+csv;
+  }
+  $$('[data-jexport="md"]').forEach(b=>b.addEventListener('click',()=>download('journal-de-bord.md',toMd())));
+  $$('[data-jexport="csv"]').forEach(b=>b.addEventListener('click',()=>download('journal-de-bord.csv',toCsv(),'text/csv')));
+  $$('[data-jexport="copy"]').forEach(b=>b.addEventListener('click',()=>copyText(toMd())));
+  const jn=$('#jName'); if(jn){ jn.value=store.get('jname',''); jn.addEventListener('input',()=>store.set('jname',jn.value)); }
+  const clr=$('#jClear'); let armed=false;
+  clr.addEventListener('click',()=>{ if(!armed){ armed=true; clr.textContent='Clique encore pour tout effacer'; setTimeout(()=>{armed=false; clr.innerHTML=I.trash+'Vider le journal';},3000); return; } entries=[]; save(); render(); armed=false; clr.innerHTML=I.trash+'Vider le journal'; toast('Journal vidé'); });
+  render();
+}
+
+})();
+</script>
+</body>
+</html>

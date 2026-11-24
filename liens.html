@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learning Lab' IA — Liens des supports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eceef2;--tile:#fff;--text:#16181d;--muted:#4a505c;--line:#e3e6ec;--accent:#2563eb;--accent-dark:#1d4ed8;--blue:#e8efff;--peach:#ffeede;--mint:#e2f6ea;--lilac:#f1e8ff;--green:#15803d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;padding:24px 16px 48px}
+main{max-width:960px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tile{grid-column:span 4;background:var(--tile);border-radius:28px;padding:24px}
+.t-blue{background:var(--blue)}.t-mint{background:var(--mint)}.t-peach{background:var(--peach)}
+.hero h1{font-size:clamp(1.5rem,3.4vw,2.2rem);font-weight:800;line-height:1.2;margin:10px 0 6px}
+.badge{display:inline-block;background:var(--accent);color:#fff;font-size:.78rem;font-weight:700;padding:6px 14px;border-radius:999px}
+.hero p{color:var(--muted)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+h2{font-size:1.1rem;font-weight:800}
+.pill{font-size:.8rem;font-weight:700;background:#fff;padding:5px 12px;border-radius:999px}
+ul{list-style:none}
+li{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid rgba(22,24,29,.1)}
+li:first-child{border-top:0}
+.tag{flex:none;min-width:76px;font-size:.78rem;font-weight:800;background:#fff;padding:4px 10px;border-radius:999px;text-align:center}
+li a{flex:1;color:var(--text);word-break:break-all;font-size:.92rem}
+li a:hover{color:var(--accent-dark)}
+.copy{flex:none;border:none;background:#fff;color:var(--text);border-radius:999px;padding:6px 14px;font:inherit;font-size:.82rem;font-weight:700;cursor:pointer;box-shadow:inset 0 0 0 1.5px var(--line)}
+.copy:hover{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.copy.ok{background:var(--mint);box-shadow:inset 0 0 0 1.5px var(--green)}
+.copy:focus-visible{outline:3px solid var(--accent-dark);outline-offset:2px}
+.all-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+textarea{width:100%;height:190px;font:13px/1.55 'JetBrains Mono',ui-monospace,Consolas,monospace;border:none;border-radius:18px;padding:14px;resize:vertical;color:var(--text);background:#f6f7f9}
+.note{font-size:.85rem;color:var(--muted);margin-top:8px}
+@media(max-width:700px){li{flex-wrap:wrap}}
+.badge{display:inline-flex;align-items:center;gap:6px}.pill{display:inline-flex;align-items:center}
+
+/* Icônes « tuile teintée » */
+.ico{display:inline-grid;place-items:center;width:1.65em;height:1.65em;border-radius:.55em;flex:none;vertical-align:-.45em;margin-right:.35em;line-height:1}
+.ico svg{width:60%;height:60%;stroke-width:2.2}
+.ti-blue{background:var(--blue);color:#1d4ed8}.ti-peach{background:var(--peach);color:#b45309}.ti-mint{background:var(--mint);color:#15803d}.ti-lilac{background:var(--lilac);color:#6d28d9}.ti-rose{background:var(--rose);color:#b91c1c}
+.ico.ti-bare{background:transparent;width:1.1em;height:1.1em;margin:0 .15em;vertical-align:-.18em}
+.ico.ti-bare svg{width:100%;height:100%}
+.card[class*="t-"] .ico:not(.ti-bare),.mini-card .ico:not(.ti-bare),.meta-pill .ico,.objectif-box .ico,.instruction-box .ico,.key-box .ico,.warn-box .ico,.pillar .ico,.famille-tag .ico,.media .ico,.lock-pill .ico,.pill .ico,.trainer .ico,.tag .ico,.link-card .ico,.stat .ico,.route-step .ico,.chip .ico,td .ico,.sit .ico{background:#fff}
+.tab .ico{width:1.75em;height:1.75em;margin-right:.1em}
+.tab.active .ico{background:rgba(255,255,255,.22);color:#fff}
+.tab .done-mark .ico{margin:0 0 0 .1em}
+.btn .ico:not(.ti-bare){width:1.6em;height:1.6em;margin:-.2em .05em -.2em -.35em}
+.btn-primary .ico:not(.ti-bare),.btn-success .ico:not(.ti-bare),.btn-warning .ico:not(.ti-bare){background:rgba(255,255,255,.22);color:#fff}
+.btn-ghost .ico.ti-bare{color:var(--text)}
+.badge .ico{background:rgba(255,255,255,.22);color:#fff;margin-left:-.4em}
+.big-lock .ico{width:72px;height:72px;border-radius:24px;margin:0}
+.icon-bg svg{width:22px;height:22px;stroke-width:2.1;color:#1d4ed8}
+.icon-bg.green svg{color:#15803d}.icon-bg.amber svg{color:#b45309}.icon-bg.purple svg{color:#6d28d9}.icon-bg.red svg{color:#b91c1c}
+.media{display:inline-flex;align-items:center}
+.media .ico{width:1.5em;height:1.5em;margin:-.15em .25em -.15em -.45em}
+.mini-card h4 .ico,h3 .ico{margin-right:.1em}
+
+</style>
+</head>
+<body>
+<main>
+  <header class="tile hero">
+    <span class="badge"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2" /><path d="M6.453 15h11.094" /><path d="M8.5 2h7" /></svg></span>Learning Lab' IA · Bachelor 1</span>
+    <h1>Liens des supports de cours</h1>
+    <p>14 h · 4 séances · 7 h en cours et 7 h en autonomie</p>
+  </header>
+  <section class="tile all">
+    <div class="all-head"><h2>Toutes les URL</h2><button class="copy" id="copy-all">Tout copier</button></div>
+    <textarea id="all-urls" readonly aria-label="Toutes les URL des supports"></textarea>
+    <p class="note">Les adresses se complètent automatiquement selon l'endroit où le dossier est publié (GitHub Pages, serveur de l'école…).</p>
+  </section>
+  <section class="tile t-blue"><div class="head"><h2>Séance 1 — Explorer et cadrer</h2><span class="pill"><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14 21v-3a2 2 0 0 0-4 0v3" /><path d="M18 4.933V21" /><path d="m4 6 7.106-3.79a2 2 0 0 1 1.788 0L20 6" /><path d="m6 11-3.52 2.147a1 1 0 0 0-.48.854V19a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a1 1 0 0 0-.48-.853L18 11" /><path d="M6 4.933V21" /><circle cx="12" cy="9" r="2" /></svg></span>En cours</span></div><ul><li><span class="tag">Théorie</span><a href="Seance_1/seance-1-explorer-et-cadrer-theorie.html">Seance_1/seance-1-explorer-et-cadrer-theorie.html</a></li><li><span class="tag">Pratique</span><a href="Seance_1/seance-1-explorer-et-cadrer-pratique.html">Seance_1/seance-1-explorer-et-cadrer-pratique.html</a></li></ul></section><section class="tile t-mint"><div class="head"><h2>Séances 2 et 3 — Expérimenter en autonomie</h2><span class="pill"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span>En autonomie</span></div><ul><li><span class="tag">Guide</span><a href="Seances_2-3/seances-2-3-experimenter-en-autonomie.html">Seances_2-3/seances-2-3-experimenter-en-autonomie.html</a></li></ul></section><section class="tile t-peach"><div class="head"><h2>Séance 4 — Finaliser et transmettre</h2><span class="pill"><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14 21v-3a2 2 0 0 0-4 0v3" /><path d="M18 4.933V21" /><path d="m4 6 7.106-3.79a2 2 0 0 1 1.788 0L20 6" /><path d="m6 11-3.52 2.147a1 1 0 0 0-.48.854V19a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a1 1 0 0 0-.48-.853L18 11" /><path d="M6 4.933V21" /><circle cx="12" cy="9" r="2" /></svg></span>En cours</span></div><ul><li><span class="tag">Théorie</span><a href="Seance_4/seance-4-finaliser-et-transmettre-theorie.html">Seance_4/seance-4-finaliser-et-transmettre-theorie.html</a></li></ul></section>
+</main>
+<script>
+function copyText(text, btn) {
+  const done = () => { const t = btn.textContent; btn.textContent = 'Copié'; btn.classList.add('ok'); setTimeout(() => { btn.textContent = t; btn.classList.remove('ok'); }, 1500); };
+  if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done); return; }
+  const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); done();
+}
+const lines = [];
+document.querySelectorAll('main section:not(.all)').forEach(sec => {
+  lines.push(sec.querySelector('h2').textContent);
+  sec.querySelectorAll('li').forEach(li => {
+    const a = li.querySelector('a'), tag = li.querySelector('.tag').textContent;
+    a.textContent = a.href;
+    lines.push('  ' + tag + ' : ' + a.href);
+    const b = document.createElement('button'); b.className = 'copy'; b.textContent = 'Copier';
+    b.onclick = () => copyText(a.href, b); li.appendChild(b);
+  });
+  lines.push('');
+});
+const all = document.getElementById('all-urls');
+all.value = lines.join('\n').trim();
+all.onclick = () => all.select();
+document.getElementById('copy-all').onclick = e => copyText(all.value, e.target);
+</script>
+</body>
+</html>
