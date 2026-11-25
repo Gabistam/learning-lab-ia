@@ -162,7 +162,17 @@ body.formateur .btn-reveal{display:inline-flex}
 .qcm-q.correct{box-shadow:inset 0 0 0 2px var(--green)}
 .qcm-q.wrong{box-shadow:inset 0 0 0 2px var(--red)}
 .qcm-q .expl{display:none;margin-top:10px;font-size:.88rem;padding-top:8px;border-top:1px dashed #cfd5de}
-.qcm-q.checked .expl{display:block}
+.qcm-q.checked .expl,.qcm-q.peek .expl{display:block}
+.qcm-q.checked .qcm-opt:not(.good):not(.bad):hover{box-shadow:inset 0 0 0 1.5px var(--line)}
+.qcm-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.qdots{display:flex;gap:5px}
+.qdot{width:9px;height:9px;border-radius:50%;background:#cfd5de}
+.qdot.cur{background:var(--accent)}
+.qdot.ok{background:var(--green)}
+.qdot.ko{background:var(--red)}
+.qcm-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;align-items:center}
+.qcm-actions .btn[hidden]{display:none}
+.qcm-recap h4{margin:0 0 10px}
 .q-num{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-right:6px}
 
 /* Vrai / faux */
@@ -474,11 +484,10 @@ Mes critères : <span class="hl">[TES 3 CRITÈRES DE RÉUSSITE]</span>.
 Liste ses <span class="hl2">3 plus grandes faiblesses</span>, puis propose une version corrigée.</pre><p class="muted">Image, audio ou vidéo : décris ton résultat à une IA de texte. Applique une correction à la fois : tu restes le juge final.</p></div>
 <details class="sub" open><summary><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>Vérifier tes acquis<span class="tab-count">3 questions</span><span class="chev" aria-hidden="true"></span></summary><div class="pgrid"><div class="card">
   <div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>QCM · Chapitre 1</div>
-  <div class="instruction-box"><strong class="title">Consigne</strong>Une seule bonne réponse par question. Réponds à tout, vérifie, puis lis les explications, y compris pour les bonnes réponses. Questions et options sont mélangées à chaque essai.</div>
+  <div class="instruction-box"><strong class="title">Consigne</strong>Une seule bonne réponse par question. Les questions s'affichent une par une : choisis une réponse, valide-la, puis lis l'explication, y compris quand tu as juste. Questions et options sont mélangées à chaque essai.</div>
   <div id="qcm0"></div>
-  <div class="progress-wrap"><div class="progress-label"><span>Réponses données</span><span id="qtxt0">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="qfill0"></div></div></div>
+  <div class="progress-wrap"><div class="progress-label"><span>Réponses validées</span><span id="qtxt0">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="qfill0"></div></div></div>
   <div class="actions-row">
-    <button class="btn btn-primary" data-qcheck="0"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 6 9 17l-5-5" /></svg></span>Vérifier</button>
     <button class="btn btn-warning btn-reveal" data-qreveal="0"><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg></span>Révéler</button>
     <button class="btn btn-ghost" data-qreset="0"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg></span>Recommencer</button>
   </div>
@@ -494,11 +503,10 @@ Liste ses <span class="hl2">3 plus grandes faiblesses</span>, puis propose une v
 <div class="card"><div class="section-title"><span class="icon-bg green"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z" /></svg></span>Du prompt réussi au prompt-modèle</div><div class="grid grid-2"><div class="mini-card"><h4>Avant · prompt noté 5/5</h4><pre class="prompt">Affiche verticale pour « Campus Live » : foule d'étudiants vue de dos, style flat, couleurs violet et orange, sans texte.</pre></div><div class="mini-card good"><h4>Après · prompt-modèle</h4><pre class="prompt">Affiche verticale pour <span class="hl">[ÉVÉNEMENT]</span> : <span class="hl">[SUJET]</span>, style <span class="hl">[STYLE]</span>, couleurs <span class="hl">[2 COULEURS]</span>, sans texte.</pre></div></div><ul class="checks cols" style="margin-top:14px"><li>3 à 5 variables, en MAJUSCULES entre crochets.</li><li>Ce qui fait la qualité reste écrit en dur.</li><li>Un camarade le teste avant la cheat sheet.</li></ul></div>
 <details class="sub" open><summary><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>Vérifier tes acquis<span class="tab-count">3 questions</span><span class="chev" aria-hidden="true"></span></summary><div class="pgrid"><div class="card">
   <div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>QCM · Chapitre 2</div>
-  <div class="instruction-box"><strong class="title">Consigne</strong>Une seule bonne réponse par question. Réponds à tout, vérifie, puis lis les explications, y compris pour les bonnes réponses. Questions et options sont mélangées à chaque essai.</div>
+  <div class="instruction-box"><strong class="title">Consigne</strong>Une seule bonne réponse par question. Les questions s'affichent une par une : choisis une réponse, valide-la, puis lis l'explication, y compris quand tu as juste. Questions et options sont mélangées à chaque essai.</div>
   <div id="qcm1"></div>
-  <div class="progress-wrap"><div class="progress-label"><span>Réponses données</span><span id="qtxt1">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="qfill1"></div></div></div>
+  <div class="progress-wrap"><div class="progress-label"><span>Réponses validées</span><span id="qtxt1">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="qfill1"></div></div></div>
   <div class="actions-row">
-    <button class="btn btn-primary" data-qcheck="1"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 6 9 17l-5-5" /></svg></span>Vérifier</button>
     <button class="btn btn-warning btn-reveal" data-qreveal="1"><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg></span>Révéler</button>
     <button class="btn btn-ghost" data-qreset="1"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg></span>Recommencer</button>
   </div>
@@ -514,11 +522,10 @@ Liste ses <span class="hl2">3 plus grandes faiblesses</span>, puis propose une v
 <div class="card"><div class="section-title"><span class="icon-bg purple"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg></span>Les 6 temps</div><div class="route"><div class="route-step"><div class="n">1</div><div class="t">Contexte</div><div class="c">Outil, cas d'usage</div></div><div class="route-step"><div class="n">2</div><div class="t">Démarche</div><div class="c">Étapes, tournants</div></div><div class="route-step here"><div class="n">3</div><div class="t">Démo</div><div class="c">Le livrable, en vrai</div></div><div class="route-step"><div class="n">4</div><div class="t">3 prompts clés</div><div class="c">Pire, déclic, meilleur</div></div><div class="route-step"><div class="n">5</div><div class="t">Limites</div><div class="c">Ce que l'IA n'a pas su faire</div></div><div class="route-step"><div class="n">6</div><div class="t">Bilan</div><div class="c">Ce que tu retiens</div></div></div><ul class="checks cols"><li>Démo hors connexion, captures de secours.</li><li>Question difficile ? Dis-le et propose ce que tu testerais.</li><li>Dans le public : un point fort et une question par camarade.</li></ul></div>
 <details class="sub" open><summary><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>Vérifier tes acquis<span class="tab-count">3 questions</span><span class="chev" aria-hidden="true"></span></summary><div class="pgrid"><div class="card">
   <div class="section-title"><span class="icon-bg amber"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></svg></span>QCM · Chapitre 3</div>
-  <div class="instruction-box"><strong class="title">Consigne</strong>Une seule bonne réponse par question. Réponds à tout, vérifie, puis lis les explications, y compris pour les bonnes réponses. Questions et options sont mélangées à chaque essai.</div>
+  <div class="instruction-box"><strong class="title">Consigne</strong>Une seule bonne réponse par question. Les questions s'affichent une par une : choisis une réponse, valide-la, puis lis l'explication, y compris quand tu as juste. Questions et options sont mélangées à chaque essai.</div>
   <div id="qcm2"></div>
-  <div class="progress-wrap"><div class="progress-label"><span>Réponses données</span><span id="qtxt2">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="qfill2"></div></div></div>
+  <div class="progress-wrap"><div class="progress-label"><span>Réponses validées</span><span id="qtxt2">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="qfill2"></div></div></div>
   <div class="actions-row">
-    <button class="btn btn-primary" data-qcheck="2"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 6 9 17l-5-5" /></svg></span>Vérifier</button>
     <button class="btn btn-warning btn-reveal" data-qreveal="2"><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg></span>Révéler</button>
     <button class="btn btn-ghost" data-qreset="2"><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg></span>Recommencer</button>
   </div>
@@ -539,7 +546,7 @@ Liste ses <span class="hl2">3 plus grandes faiblesses</span>, puis propose une v
 </div>
 <footer>Tous droits réservés — Gabistam 2026</footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script>window.__DATA__ = {"key": "s4-theorie-v2", "families": {"f1": "Vérifier", "f2": "Réutiliser", "f3": "Transmettre"}, "acts": ["ch0", "ch1", "ch2"], "explorers": {}, "qcms": [[{"q": "Quel journal de bord est le plus crédible ?", "o": ["Celui qui ne montre que des réussites", "Celui qui documente aussi les échecs et les ajustements", "Celui qui ne contient que le résultat final", "Le plus long"], "a": 1, "e": "Les échecs analysés prouvent ta démarche d'essais-erreurs."}, {"q": "Quel prompt d'auto-critique est le mieux formulé ?", "o": ["« C'est bien ? »", "« Améliore. »", "« Liste 3 faiblesses selon mes critères, puis propose une version corrigée. »", "« Recommence. »"], "a": 2, "e": "Des critères, des faiblesses précises, puis une correction."}, {"q": "L'IA critique son propre résultat. Qui décide de ce que tu gardes ?", "o": ["L'IA, elle connaît son travail", "Toi : l'IA peut se tromper ou être complaisante", "Le premier camarade venu", "Personne"], "a": 1, "e": "Tu restes le juge final."}], [{"q": "Qu'est-ce qu'un prompt-modèle ?", "o": ["Un prompt réutilisable avec des [VARIABLES] à remplacer", "Le premier prompt du journal", "Un prompt payant", "Un prompt écrit par le formateur"], "a": 0, "e": "C'est un gabarit : ce qui change devient une variable."}, {"q": "D'où part un bon prompt-modèle ?", "o": ["D'un prompt jamais testé", "D'une liste de mots au hasard", "D'un prompt qui a vraiment fonctionné dans ton journal", "D'un tutoriel vidéo"], "a": 2, "e": "On généralise ce qui a fait ses preuves."}, {"q": "Où vont tes prompts-modèles ?", "o": ["Dans ta fiche de cadrage", "Dans ta cheat sheet", "Nulle part", "Dans ton profil"], "a": 1, "e": "Ils rendent ta cheat sheet réutilisable par toute la promo."}], [{"q": "Combien de temps dure ta présentation ?", "o": ["10 minutes", "4 minutes, puis 2 minutes de questions", "30 secondes", "20 minutes"], "a": 1, "e": "4 minutes de présentation et de démo, puis 2 minutes d'échanges."}, {"q": "Quels « 3 prompts clés » montrer ?", "o": ["Les trois premiers", "Les trois plus longs", "Le pire, celui du déclic et le meilleur", "Trois au hasard"], "a": 2, "e": "Ils racontent ta progression."}, {"q": "Pourquoi préparer ta démo hors connexion ?", "o": ["Pour ne pas dépendre du réseau ou d'un quota le jour J", "Parce que l'IA est interdite en soutenance", "Pour aller plus vite", "Ce n'est pas utile"], "a": 0, "e": "Fichiers téléchargés et captures de secours rendent la démo fiable."}]]};
+<script>window.__DATA__ = {"key": "s4-theorie-v2", "families": {"f1": "Vérifier", "f2": "Réutiliser", "f3": "Transmettre"}, "acts": ["ch0", "ch1", "ch2"], "explorers": {}, "qcms": [[{"q": "Quelle trace d'expérimentation est la plus crédible ?", "o": ["Celle qui ne montre que des réussites", "Celle qui documente aussi les échecs et les ajustements", "Celle qui ne contient que le résultat final", "La plus longue"], "a": 1, "e": "Les échecs analysés prouvent une démarche d'essais-erreurs."}, {"q": "Quel prompt d'auto-critique est le mieux formulé ?", "o": ["« C'est bien ? »", "« Améliore. »", "« Liste 3 faiblesses selon mes critères, puis propose une version corrigée. »", "« Recommence. »"], "a": 2, "e": "Des critères, des faiblesses précises, puis une correction."}, {"q": "L'IA critique son propre résultat. Qui décide de ce que tu gardes ?", "o": ["L'IA, elle connaît son travail", "Toi : l'IA peut se tromper ou être complaisante", "Le premier camarade venu", "Personne"], "a": 1, "e": "Tu restes le juge final."}], [{"q": "Qu'est-ce qu'un prompt-modèle ?", "o": ["Un prompt réutilisable avec des [VARIABLES] à remplacer", "Le tout premier prompt que l'on écrit", "Un prompt payant", "Un prompt réservé aux experts"], "a": 0, "e": "C'est un gabarit : ce qui change devient une variable."}, {"q": "D'où part un bon prompt-modèle ?", "o": ["D'un prompt jamais testé", "D'une liste de mots au hasard", "D'un prompt qui a déjà fait ses preuves sur un vrai essai", "D'un tutoriel vidéo"], "a": 2, "e": "On généralise ce qui a fait ses preuves."}, {"q": "Comment rendre un prompt-modèle facile à réutiliser par quelqu'un d'autre ?", "o": ["En figeant toutes les valeurs dans le texte", "En signalant clairement les variables à remplacer et en ajoutant un exemple d'utilisation", "En le gardant secret", "En le rendant le plus long possible"], "a": 1, "e": "Des variables claires et un exemple permettent à chacun d'adapter le prompt à son propre cas."}], [{"q": "Dans une présentation courte, que faut-il privilégier ?", "o": ["Tout montrer, sans rien choisir", "Quelques éléments bien choisis, présentés dans l'ordre qui raconte la démarche", "Lire ses notes mot à mot", "Dépasser le temps pour tout dire"], "a": 1, "e": "Un temps court impose de choisir : peu d'éléments, bien ordonnés, qui racontent la démarche."}, {"q": "Quels prompts choisir pour illustrer une progression ?", "o": ["Les trois premiers", "Les trois plus longs", "Le pire, celui du déclic et le meilleur", "Trois au hasard"], "a": 2, "e": "Ils racontent la progression."}, {"q": "Pourquoi prévoir une démo de secours (captures, fichiers téléchargés) ?", "o": ["Pour ne pas dépendre du réseau ou d'un quota le jour J", "Parce que l'IA est interdite en public", "Pour aller plus vite", "Ce n'est pas utile"], "a": 0, "e": "Fichiers téléchargés et captures de secours rendent la démo fiable."}]]};
 window.__ICONS__ = {"ok": "<span class=\"ico ti-mint\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><circle cx=\"12\" cy=\"12\" r=\"10\" /><path d=\"m16 9-5.5 5.5L8 12\" /></svg></span>", "ko": "<span class=\"ico ti-rose\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><circle cx=\"12\" cy=\"12\" r=\"10\" /><path d=\"m15 9-6 6\" /><path d=\"m9 9 6 6\" /></svg></span>", "unlock": "<span class=\"ico ti-mint\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /><path d=\"M7 11V7a5 5 0 0 1 9.9-1\" /></svg></span>", "clip": "<span class=\"ico ti-blue\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><path d=\"m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551\" /></svg></span>", "next": "<span class=\"ico ti-bare\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><path d=\"m15 10 5 5-5 5\" /><path d=\"M4 4v7a4 4 0 0 0 4 4h12\" /></svg></span>", "x": "<span class=\"ico ti-bare\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><path d=\"M18 6 6 18\" /><path d=\"m6 6 12 12\" /></svg></span>", "trash": "<span class=\"ico ti-rose\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><path d=\"M10 11v6\" /><path d=\"M14 11v6\" /><path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6\" /><path d=\"M3 6h18\" /><path d=\"M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\" /></svg></span>", "okTile": "<span class=\"ico ti-mint\"><svg aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" ><circle cx=\"12\" cy=\"12\" r=\"10\" /><path d=\"m16 9-5.5 5.5L8 12\" /></svg></span>"};</script>
 <script>
 (function(){
@@ -630,45 +637,59 @@ $$('[data-explorer]').forEach(box=>{
   show(0);
 });
 
-/* QCM de chapitre */
+/* QCM de chapitre : une question à la fois (choisir, valider, lire l'explication, passer à la suivante) */
 if(D.qcms){
   const qState={}, scores={}, L=['A','B','C','D','E'];
   function renderQCM(ci){
-    const box=$('#qcm'+ci); box.innerHTML='';
     const qs = shuffle(D.qcms[ci]).map(q=>({q:q.q,e:q.e,opts:shuffle(q.o.map((t,i)=>({t,good:i===q.a})))}));
-    qState[ci]={qs};
-    qs.forEach((q,qi)=>{
-      const d=document.createElement('div'); d.className='qcm-q';
-      d.innerHTML='<div class="qt"><span class="q-num">Q'+(qi+1)+'</span>'+esc(q.q)+'</div><div class="qcm-opts" role="radiogroup">'+
-        q.opts.map((o,oi)=>'<button type="button" class="qcm-opt" role="radio" aria-checked="false" data-oi="'+oi+'"><span class="l">'+L[oi]+'</span><span>'+esc(o.t)+'</span></button>').join('')+'</div><div class="expl"></div>';
-      $$('.qcm-opt',d).forEach(b=>b.addEventListener('click',()=>{
-        if(d.classList.contains('checked')) return;
-        $$('.qcm-opt',d).forEach(x=>{x.classList.remove('sel');x.setAttribute('aria-checked','false');});
-        b.classList.add('sel'); b.setAttribute('aria-checked','true'); d.dataset.ans=b.dataset.oi; updQ(ci);
-      }));
-      box.appendChild(d);
-    });
-    $('#qres'+ci).classList.remove('show'); updQ(ci);
+    qState[ci]={qs,i:0,sel:null,checked:false,res:qs.map(()=>null)};
+    $('#qres'+ci).classList.remove('show'); showQ(ci);
   }
-  function updQ(ci){ const rows=$$('#qcm'+ci+' .qcm-q'); setProgress('qfill'+ci,'qtxt'+ci,rows.filter(r=>r.dataset.ans!==undefined).length,rows.length); }
-  function checkQCM(ci, silent){
-    const rows=$$('#qcm'+ci+' .qcm-q');
-    if(!silent && rows.some(r=>r.dataset.ans===undefined)){ toast('Réponds à toutes les questions avant de vérifier.'); return; }
-    let ok=0;
-    rows.forEach((r,qi)=>{
-      const q=qState[ci].qs[qi]; const ans=r.dataset.ans===undefined?-1:+r.dataset.ans;
-      const gi=q.opts.findIndex(o=>o.good); const good=ans===gi; if(good) ok++;
-      r.classList.remove('correct','wrong'); r.classList.add('checked', good?'correct':'wrong');
-      $$('.qcm-opt',r).forEach((b,oi)=>{ b.classList.toggle('good',oi===gi); b.classList.toggle('bad',oi===ans&&!good); });
-      $('.expl',r).innerHTML=(good?I.ok:I.ko+'Bonne réponse : <strong>'+L[gi]+'</strong>. ')+esc(q.e);
-    });
-    $('#qres'+ci).innerHTML='<div class="score">'+ok+' / '+rows.length+'</div><div class="msg">'+scoreMsg(Math.round(ok/rows.length*100))+'</div>';
-    $('#qres'+ci).classList.add('show');
-    if(!silent){ scores[ci]=Math.max(scores[ci]||0,ok); updScores(); markDone('ch'+ci); }
+  function nbDone(ci){ return qState[ci].res.filter(r=>r!==null).length; }
+  function showQ(ci, focus){
+    const S=qState[ci], q=S.qs[S.i], n=S.qs.length, box=$('#qcm'+ci); S.sel=null; S.checked=false;
+    const dots=S.qs.map((_,k)=>'<span class="qdot'+(S.res[k]===true?' ok':S.res[k]===false?' ko':k===S.i?' cur':'')+'"></span>').join('');
+    box.innerHTML='<div class="qcm-q"><div class="qcm-top"><span class="q-num">Question '+(S.i+1)+' / '+n+'</span><span class="qdots" aria-hidden="true">'+dots+'</span></div>'+
+      '<div class="qt" id="qt'+ci+'" tabindex="-1">'+esc(q.q)+'</div>'+
+      '<div class="qcm-opts" role="radiogroup" aria-labelledby="qt'+ci+'">'+
+        q.opts.map((o,oi)=>'<button type="button" class="qcm-opt" role="radio" aria-checked="false" data-oi="'+oi+'"><span class="l">'+L[oi]+'</span><span>'+esc(o.t)+'</span></button>').join('')+'</div>'+
+      '<div class="expl" role="status" aria-live="polite"></div>'+
+      '<div class="qcm-actions"><button type="button" class="btn btn-primary" data-qvalid disabled>Valider ma réponse</button><button type="button" class="btn btn-primary" data-qnext hidden>'+(S.i===n-1?'Voir mon résultat':'Question suivante')+'</button></div></div>';
+    const valid=$('[data-qvalid]',box), next=$('[data-qnext]',box), opts=$$('.qcm-opt',box);
+    opts.forEach(b=>b.addEventListener('click',()=>{
+      if(S.checked) return;
+      opts.forEach(x=>{x.classList.remove('sel');x.setAttribute('aria-checked','false');});
+      b.classList.add('sel'); b.setAttribute('aria-checked','true'); S.sel=+b.dataset.oi; valid.disabled=false;
+    }));
+    valid.addEventListener('click',()=>validateQ(ci));
+    next.addEventListener('click',()=>{ if(S.i<n-1){ S.i++; showQ(ci,true); } else finishQCM(ci); });
+    setProgress('qfill'+ci,'qtxt'+ci,nbDone(ci),n);
+    if(focus){ const calm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; box.scrollIntoView({behavior:calm?'auto':'smooth',block:'nearest'}); $('#qt'+ci).focus({preventScroll:true}); }
+  }
+  function validateQ(ci){
+    const S=qState[ci]; if(S.sel===null||S.checked) return;
+    const card=$('.qcm-q',$('#qcm'+ci)), q=S.qs[S.i], gi=q.opts.findIndex(o=>o.good), good=S.sel===gi;
+    S.checked=true; S.res[S.i]=good;
+    card.classList.remove('peek'); card.classList.add('checked', good?'correct':'wrong');
+    $$('.qcm-opt',card).forEach((b,oi)=>{ b.classList.toggle('good',oi===gi); b.classList.toggle('bad',oi===S.sel&&!good); b.setAttribute('aria-disabled','true'); });
+    $('.expl',card).innerHTML=(good?I.ok:I.ko+'Bonne réponse : <strong>'+L[gi]+'</strong>. ')+esc(q.e);
+    $$('.qdot',card)[S.i].className='qdot '+(good?'ok':'ko');
+    const v=$('[data-qvalid]',card), nx=$('[data-qnext]',card); v.hidden=true; nx.hidden=false; nx.focus({preventScroll:true});
+    setProgress('qfill'+ci,'qtxt'+ci,nbDone(ci),S.qs.length);
+  }
+  function finishQCM(ci){
+    const S=qState[ci], n=S.qs.length, ok=S.res.filter(Boolean).length;
+    const errs=S.qs.map((q,k)=>({q,k})).filter(x=>S.res[x.k]===false);
+    $('#qcm'+ci).innerHTML='<div class="qcm-recap">'+(errs.length ? '<h4>À revoir</h4>'+errs.map(({q,k})=>{ const gi=q.opts.findIndex(o=>o.good);
+      return '<div class="qcm-q wrong checked"><div class="qt"><span class="q-num">Q'+(k+1)+'</span>'+esc(q.q)+'</div><div class="expl">'+I.ko+'Bonne réponse : <strong>'+L[gi]+'. '+esc(q.opts[gi].t)+'</strong>. '+esc(q.e)+'</div></div>'; }).join('') : '<p>Sans faute : toutes les réponses sont justes.</p>')+'</div>';
+    const res=$('#qres'+ci); res.innerHTML='<div class="score">'+ok+' / '+n+'</div><div class="msg">'+scoreMsg(Math.round(ok/n*100))+'</div>'; res.classList.add('show');
+    scores[ci]=Math.max(scores[ci]||0,ok); updScores(); markDone('ch'+ci);
   }
   function revealQCM(ci){
-    $$('#qcm'+ci+' .qcm-q').forEach((r,qi)=>{ const gi=qState[ci].qs[qi].opts.findIndex(o=>o.good); r.dataset.ans=gi; $$('.qcm-opt',r).forEach((b,oi)=>b.classList.toggle('sel',oi===gi)); });
-    updQ(ci); checkQCM(ci,true);
+    const S=qState[ci], card=$('.qcm-q',$('#qcm'+ci)); if(!card||S.checked) return;
+    const q=S.qs[S.i], gi=q.opts.findIndex(o=>o.good);
+    card.classList.add('peek'); $$('.qcm-opt',card).forEach((b,oi)=>b.classList.toggle('good',oi===gi));
+    $('.expl',card).innerHTML='Bonne réponse : <strong>'+L[gi]+'</strong>. '+esc(q.e);
   }
   function updScores(){
     let tot=0,max=0;
@@ -676,9 +697,8 @@ if(D.qcms){
     const st=$('#scoreTotal'); if(st) st.textContent=tot+' / '+max;
   }
   D.qcms.forEach((_,ci)=>renderQCM(ci));
-  $$('[data-qcheck]').forEach(b=>b.addEventListener('click',()=>checkQCM(+b.dataset.qcheck)));
   $$('[data-qreveal]').forEach(b=>b.addEventListener('click',()=>revealQCM(+b.dataset.qreveal)));
-  $$('[data-qreset]').forEach(b=>b.addEventListener('click',()=>renderQCM(+b.dataset.qreset)));
+  $$('[data-qreset]').forEach(b=>b.addEventListener('click',()=>{ renderQCM(+b.dataset.qreset); const box=$('#qcm'+b.dataset.qreset); const t=$('.qt',box); if(t) t.focus({preventScroll:true}); }));
 }
 
 /* Cas 1 — correspondance */

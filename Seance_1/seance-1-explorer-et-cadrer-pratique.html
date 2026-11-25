@@ -162,7 +162,17 @@ body.formateur .btn-reveal{display:inline-flex}
 .qcm-q.correct{box-shadow:inset 0 0 0 2px var(--green)}
 .qcm-q.wrong{box-shadow:inset 0 0 0 2px var(--red)}
 .qcm-q .expl{display:none;margin-top:10px;font-size:.88rem;padding-top:8px;border-top:1px dashed #cfd5de}
-.qcm-q.checked .expl{display:block}
+.qcm-q.checked .expl,.qcm-q.peek .expl{display:block}
+.qcm-q.checked .qcm-opt:not(.good):not(.bad):hover{box-shadow:inset 0 0 0 1.5px var(--line)}
+.qcm-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.qdots{display:flex;gap:5px}
+.qdot{width:9px;height:9px;border-radius:50%;background:#cfd5de}
+.qdot.cur{background:var(--accent)}
+.qdot.ok{background:var(--green)}
+.qdot.ko{background:var(--red)}
+.qcm-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;align-items:center}
+.qcm-actions .btn[hidden]{display:none}
+.qcm-recap h4{margin:0 0 10px}
 .q-num{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-right:6px}
 
 /* Vrai / faux */
@@ -460,7 +470,7 @@ footer{grid-column:1/-1}
   </aside>
   <main class="pages">
 <section class="panel active" data-panel="0" role="tabpanel"><div class="page-head t-blue"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09" /><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z" /><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05" /></svg></span><span class="sum-text"><span class="sum-title">Démarrage</span><span class="sum-sub">Objectifs, activités et mode d’emploi</span></span></div><div class="pgrid">
-<div class="card"><div class="section-title"><span class="icon-bg green"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg></span>Mettre en pratique la séance 1</div><p class="lead">Ce support te fait manipuler les notions du support théorique, puis les appliquer à ton propre projet.</p><div class="objectif-box"><strong class="title">À la fin de cette séance, tu seras capable de :</strong><ul class="clean"><li>Classer les IA génératives en 4 familles : texte (code compris), image, audio et vidéo ;</li><li>Choisir un outil adapté à tes envies et cadrer un projet réaliste ;</li><li>Rédiger des prompts avec la méthode des 5 Piliers et choisir entre 4 types de prompts : zero-shot, few-shot, 5 Piliers et Prompt Magic ;</li><li>Repérer les hallucinations, les biais et les autres limites d'une IA ;</li><li>Documenter ta démarche d'essais-erreurs dans un journal de bord.</li></ul></div><div class="grid grid-3"><div class="mini-card c-blue"><h4><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z" /></svg></span>Cas 1 · Correspondance</h4><p class="muted">Associe 30 termes à leur définition, en 3 rounds de 10 tirés au hasard.</p></div><div class="mini-card c-peach"><h4><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg></span>Cas 2 · Situations</h4><p class="muted">5 groupes de 4 situations : trouve la notion commune et repère l'intruse.</p></div><div class="mini-card c-mint"><h4><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Cas 3 · Vrai / Faux</h4><p class="muted">12 affirmations à trancher, avec une explication pour chacune.</p></div><div class="mini-card c-lilac"><h4><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" /></svg></span>Mini-TP prompt</h4><p class="muted">Du mauvais prompt au prompt structuré : mesure l'écart avec ton propre outil.</p></div><div class="mini-card"><h4><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg></span>Glossaire</h4><p class="muted">Débloqué uniquement quand les 3 cas sont terminés.</p></div></div><h3>Les familles de notions</h3><div class="chips"><span class="famille-tag f1">Paysage IA · 7</span><span class="famille-tag f2">Prompt · 9</span><span class="famille-tag f3">Limites &amp; éthique · 8</span><span class="famille-tag f4">Méthode · 6</span></div><div class="instruction-box"><strong class="title">Mode d'emploi</strong>Fais les cas dans l'ordre. Chaque activité validée fait avancer la barre de progression ; les termes, les situations et les affirmations sont mélangés à chaque nouvel essai. Garde ton outil IA ouvert pour le mini-TP.</div><div class="link-card"><span><strong><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m16 6 4 14" /><path d="M12 6v14" /><path d="M8 8v12" /><path d="M4 4v16" /></svg></span>Support théorique associé</strong><br><span class="muted">Relis un chapitre en cas de doute.</span></span><a class="btn btn-ghost" href="seance-1-explorer-et-cadrer-theorie.html"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Ouvrir le support théorique</a></div><div class="nav-bottom"><span></span><button class="btn btn-primary" data-goto="c1">Commencer : Cas 1 <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div></div>
+<div class="card"><div class="section-title"><span class="icon-bg green"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg></span>Mettre en pratique la séance 1</div><p class="lead">Ce support te fait manipuler les notions du support théorique, puis les appliquer à ton propre projet.</p><div class="objectif-box"><strong class="title">À la fin de cette séance, tu seras capable de :</strong><ul class="clean"><li>Classer les IA génératives en 4 familles : texte (code compris), image, audio et vidéo ;</li><li>Choisir un outil adapté à tes envies et cadrer un projet réaliste ;</li><li>Rédiger des prompts avec la méthode des 5 Piliers et choisir entre 4 types de prompts : zero-shot, few-shot, 5 Piliers et Prompt Magic ;</li><li>Repérer les hallucinations, les biais et les autres limites d'une IA ;</li><li>Documenter ta démarche d'essais-erreurs dans un journal de bord.</li></ul></div><div class="grid grid-3"><div class="mini-card c-blue"><h4><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z" /></svg></span>Cas 1 · Correspondance</h4><p class="muted">Associe 30 termes à leur définition, en 3 rounds de 10 tirés au hasard.</p></div><div class="mini-card c-peach"><h4><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg></span>Cas 2 · Situations</h4><p class="muted">5 groupes de 4 situations : trouve la notion commune et repère l'intruse.</p></div><div class="mini-card c-mint"><h4><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Cas 3 · Vrai / Faux</h4><p class="muted">12 affirmations à trancher, avec une explication pour chacune.</p></div><div class="mini-card c-lilac"><h4><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" /></svg></span>Mini-TP prompt</h4><p class="muted">Du mauvais prompt au prompt structuré : mesure l'écart avec ton propre outil.</p></div><div class="mini-card"><h4><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg></span>Glossaire</h4><p class="muted">Débloqué uniquement quand les 3 cas sont terminés.</p></div></div><h3>Les familles de notions</h3><div class="chips"><span class="famille-tag f1">Paysage IA · 7</span><span class="famille-tag f2">Prompt · 9</span><span class="famille-tag f3">Limites &amp; éthique · 8</span><span class="famille-tag f4">Méthode · 6</span></div><div class="instruction-box"><strong class="title">Mode d'emploi</strong>Fais les cas dans l'ordre. Chaque activité validée fait avancer la barre de progression ; les termes, les situations et les affirmations sont mélangés à chaque nouvel essai. Garde ton outil IA ouvert pour le mini-TP.</div><div class="link-card"><span><strong><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m16 6 4 14" /><path d="M12 6v14" /><path d="M8 8v12" /><path d="M4 4v16" /></svg></span>Support théorique associé</strong><br><span class="muted">Relis un chapitre en cas de doute.</span></span><a class="btn btn-ghost" href="../index.html"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Ouvrir le support théorique</a></div><div class="nav-bottom"><span></span><button class="btn btn-primary" data-goto="c1">Commencer : Cas 1 <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div></div>
 
 </div><div class="pager"><span></span><button class="pg primary" type="button" data-goto="c1">Cas 1 · Correspondance <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div></section>
 <section class="panel" data-panel="c1" data-act="cas1" role="tabpanel"><div class="page-head t-blue"><span class="icon-bg">01</span><span class="sum-text"><span class="sum-title">Cas 1 · Correspondance</span><span class="sum-sub">30 termes à associer, en 3 rounds de 10</span></span><span class="status"><span class="s-todo">À valider</span><span class="s-ok"><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Validé</span></span></div><div class="pgrid">
@@ -579,45 +589,59 @@ $$('[data-explorer]').forEach(box=>{
   show(0);
 });
 
-/* QCM de chapitre */
+/* QCM de chapitre : une question à la fois (choisir, valider, lire l'explication, passer à la suivante) */
 if(D.qcms){
   const qState={}, scores={}, L=['A','B','C','D','E'];
   function renderQCM(ci){
-    const box=$('#qcm'+ci); box.innerHTML='';
     const qs = shuffle(D.qcms[ci]).map(q=>({q:q.q,e:q.e,opts:shuffle(q.o.map((t,i)=>({t,good:i===q.a})))}));
-    qState[ci]={qs};
-    qs.forEach((q,qi)=>{
-      const d=document.createElement('div'); d.className='qcm-q';
-      d.innerHTML='<div class="qt"><span class="q-num">Q'+(qi+1)+'</span>'+esc(q.q)+'</div><div class="qcm-opts" role="radiogroup">'+
-        q.opts.map((o,oi)=>'<button type="button" class="qcm-opt" role="radio" aria-checked="false" data-oi="'+oi+'"><span class="l">'+L[oi]+'</span><span>'+esc(o.t)+'</span></button>').join('')+'</div><div class="expl"></div>';
-      $$('.qcm-opt',d).forEach(b=>b.addEventListener('click',()=>{
-        if(d.classList.contains('checked')) return;
-        $$('.qcm-opt',d).forEach(x=>{x.classList.remove('sel');x.setAttribute('aria-checked','false');});
-        b.classList.add('sel'); b.setAttribute('aria-checked','true'); d.dataset.ans=b.dataset.oi; updQ(ci);
-      }));
-      box.appendChild(d);
-    });
-    $('#qres'+ci).classList.remove('show'); updQ(ci);
+    qState[ci]={qs,i:0,sel:null,checked:false,res:qs.map(()=>null)};
+    $('#qres'+ci).classList.remove('show'); showQ(ci);
   }
-  function updQ(ci){ const rows=$$('#qcm'+ci+' .qcm-q'); setProgress('qfill'+ci,'qtxt'+ci,rows.filter(r=>r.dataset.ans!==undefined).length,rows.length); }
-  function checkQCM(ci, silent){
-    const rows=$$('#qcm'+ci+' .qcm-q');
-    if(!silent && rows.some(r=>r.dataset.ans===undefined)){ toast('Réponds à toutes les questions avant de vérifier.'); return; }
-    let ok=0;
-    rows.forEach((r,qi)=>{
-      const q=qState[ci].qs[qi]; const ans=r.dataset.ans===undefined?-1:+r.dataset.ans;
-      const gi=q.opts.findIndex(o=>o.good); const good=ans===gi; if(good) ok++;
-      r.classList.remove('correct','wrong'); r.classList.add('checked', good?'correct':'wrong');
-      $$('.qcm-opt',r).forEach((b,oi)=>{ b.classList.toggle('good',oi===gi); b.classList.toggle('bad',oi===ans&&!good); });
-      $('.expl',r).innerHTML=(good?I.ok:I.ko+'Bonne réponse : <strong>'+L[gi]+'</strong>. ')+esc(q.e);
-    });
-    $('#qres'+ci).innerHTML='<div class="score">'+ok+' / '+rows.length+'</div><div class="msg">'+scoreMsg(Math.round(ok/rows.length*100))+'</div>';
-    $('#qres'+ci).classList.add('show');
-    if(!silent){ scores[ci]=Math.max(scores[ci]||0,ok); updScores(); markDone('ch'+ci); }
+  function nbDone(ci){ return qState[ci].res.filter(r=>r!==null).length; }
+  function showQ(ci, focus){
+    const S=qState[ci], q=S.qs[S.i], n=S.qs.length, box=$('#qcm'+ci); S.sel=null; S.checked=false;
+    const dots=S.qs.map((_,k)=>'<span class="qdot'+(S.res[k]===true?' ok':S.res[k]===false?' ko':k===S.i?' cur':'')+'"></span>').join('');
+    box.innerHTML='<div class="qcm-q"><div class="qcm-top"><span class="q-num">Question '+(S.i+1)+' / '+n+'</span><span class="qdots" aria-hidden="true">'+dots+'</span></div>'+
+      '<div class="qt" id="qt'+ci+'" tabindex="-1">'+esc(q.q)+'</div>'+
+      '<div class="qcm-opts" role="radiogroup" aria-labelledby="qt'+ci+'">'+
+        q.opts.map((o,oi)=>'<button type="button" class="qcm-opt" role="radio" aria-checked="false" data-oi="'+oi+'"><span class="l">'+L[oi]+'</span><span>'+esc(o.t)+'</span></button>').join('')+'</div>'+
+      '<div class="expl" role="status" aria-live="polite"></div>'+
+      '<div class="qcm-actions"><button type="button" class="btn btn-primary" data-qvalid disabled>Valider ma réponse</button><button type="button" class="btn btn-primary" data-qnext hidden>'+(S.i===n-1?'Voir mon résultat':'Question suivante')+'</button></div></div>';
+    const valid=$('[data-qvalid]',box), next=$('[data-qnext]',box), opts=$$('.qcm-opt',box);
+    opts.forEach(b=>b.addEventListener('click',()=>{
+      if(S.checked) return;
+      opts.forEach(x=>{x.classList.remove('sel');x.setAttribute('aria-checked','false');});
+      b.classList.add('sel'); b.setAttribute('aria-checked','true'); S.sel=+b.dataset.oi; valid.disabled=false;
+    }));
+    valid.addEventListener('click',()=>validateQ(ci));
+    next.addEventListener('click',()=>{ if(S.i<n-1){ S.i++; showQ(ci,true); } else finishQCM(ci); });
+    setProgress('qfill'+ci,'qtxt'+ci,nbDone(ci),n);
+    if(focus){ const calm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; box.scrollIntoView({behavior:calm?'auto':'smooth',block:'nearest'}); $('#qt'+ci).focus({preventScroll:true}); }
+  }
+  function validateQ(ci){
+    const S=qState[ci]; if(S.sel===null||S.checked) return;
+    const card=$('.qcm-q',$('#qcm'+ci)), q=S.qs[S.i], gi=q.opts.findIndex(o=>o.good), good=S.sel===gi;
+    S.checked=true; S.res[S.i]=good;
+    card.classList.remove('peek'); card.classList.add('checked', good?'correct':'wrong');
+    $$('.qcm-opt',card).forEach((b,oi)=>{ b.classList.toggle('good',oi===gi); b.classList.toggle('bad',oi===S.sel&&!good); b.setAttribute('aria-disabled','true'); });
+    $('.expl',card).innerHTML=(good?I.ok:I.ko+'Bonne réponse : <strong>'+L[gi]+'</strong>. ')+esc(q.e);
+    $$('.qdot',card)[S.i].className='qdot '+(good?'ok':'ko');
+    const v=$('[data-qvalid]',card), nx=$('[data-qnext]',card); v.hidden=true; nx.hidden=false; nx.focus({preventScroll:true});
+    setProgress('qfill'+ci,'qtxt'+ci,nbDone(ci),S.qs.length);
+  }
+  function finishQCM(ci){
+    const S=qState[ci], n=S.qs.length, ok=S.res.filter(Boolean).length;
+    const errs=S.qs.map((q,k)=>({q,k})).filter(x=>S.res[x.k]===false);
+    $('#qcm'+ci).innerHTML='<div class="qcm-recap">'+(errs.length ? '<h4>À revoir</h4>'+errs.map(({q,k})=>{ const gi=q.opts.findIndex(o=>o.good);
+      return '<div class="qcm-q wrong checked"><div class="qt"><span class="q-num">Q'+(k+1)+'</span>'+esc(q.q)+'</div><div class="expl">'+I.ko+'Bonne réponse : <strong>'+L[gi]+'. '+esc(q.opts[gi].t)+'</strong>. '+esc(q.e)+'</div></div>'; }).join('') : '<p>Sans faute : toutes les réponses sont justes.</p>')+'</div>';
+    const res=$('#qres'+ci); res.innerHTML='<div class="score">'+ok+' / '+n+'</div><div class="msg">'+scoreMsg(Math.round(ok/n*100))+'</div>'; res.classList.add('show');
+    scores[ci]=Math.max(scores[ci]||0,ok); updScores(); markDone('ch'+ci);
   }
   function revealQCM(ci){
-    $$('#qcm'+ci+' .qcm-q').forEach((r,qi)=>{ const gi=qState[ci].qs[qi].opts.findIndex(o=>o.good); r.dataset.ans=gi; $$('.qcm-opt',r).forEach((b,oi)=>b.classList.toggle('sel',oi===gi)); });
-    updQ(ci); checkQCM(ci,true);
+    const S=qState[ci], card=$('.qcm-q',$('#qcm'+ci)); if(!card||S.checked) return;
+    const q=S.qs[S.i], gi=q.opts.findIndex(o=>o.good);
+    card.classList.add('peek'); $$('.qcm-opt',card).forEach((b,oi)=>b.classList.toggle('good',oi===gi));
+    $('.expl',card).innerHTML='Bonne réponse : <strong>'+L[gi]+'</strong>. '+esc(q.e);
   }
   function updScores(){
     let tot=0,max=0;
@@ -625,9 +649,8 @@ if(D.qcms){
     const st=$('#scoreTotal'); if(st) st.textContent=tot+' / '+max;
   }
   D.qcms.forEach((_,ci)=>renderQCM(ci));
-  $$('[data-qcheck]').forEach(b=>b.addEventListener('click',()=>checkQCM(+b.dataset.qcheck)));
   $$('[data-qreveal]').forEach(b=>b.addEventListener('click',()=>revealQCM(+b.dataset.qreveal)));
-  $$('[data-qreset]').forEach(b=>b.addEventListener('click',()=>renderQCM(+b.dataset.qreset)));
+  $$('[data-qreset]').forEach(b=>b.addEventListener('click',()=>{ renderQCM(+b.dataset.qreset); const box=$('#qcm'+b.dataset.qreset); const t=$('.qt',box); if(t) t.focus({preventScroll:true}); }));
 }
 
 /* Cas 1 — correspondance */

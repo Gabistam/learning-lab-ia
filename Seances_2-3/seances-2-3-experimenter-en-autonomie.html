@@ -162,7 +162,17 @@ body.formateur .btn-reveal{display:inline-flex}
 .qcm-q.correct{box-shadow:inset 0 0 0 2px var(--green)}
 .qcm-q.wrong{box-shadow:inset 0 0 0 2px var(--red)}
 .qcm-q .expl{display:none;margin-top:10px;font-size:.88rem;padding-top:8px;border-top:1px dashed #cfd5de}
-.qcm-q.checked .expl{display:block}
+.qcm-q.checked .expl,.qcm-q.peek .expl{display:block}
+.qcm-q.checked .qcm-opt:not(.good):not(.bad):hover{box-shadow:inset 0 0 0 1.5px var(--line)}
+.qcm-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.qdots{display:flex;gap:5px}
+.qdot{width:9px;height:9px;border-radius:50%;background:#cfd5de}
+.qdot.cur{background:var(--accent)}
+.qdot.ok{background:var(--green)}
+.qdot.ko{background:var(--red)}
+.qcm-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;align-items:center}
+.qcm-actions .btn[hidden]{display:none}
+.qcm-recap h4{margin:0 0 10px}
 .q-num{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-right:6px}
 
 /* Vrai / faux */
@@ -460,7 +470,7 @@ footer{grid-column:1/-1}
   </aside>
   <main class="pages">
 <section class="panel active" data-panel="0" role="tabpanel"><div class="page-head t-mint"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09" /><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z" /><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05" /></svg></span><span class="sum-text"><span class="sum-title">Démarrage</span><span class="sum-sub">Ton kit, ta feuille de route, la règle des 15 minutes</span></span></div><div class="pgrid">
-<div class="card"><div class="section-title"><span class="icon-bg green"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span>Bienvenue en autonomie</div><div class="key-box"><div class="big">Je sais expérimenter, douter et documenter seul.</div><p style="margin:8px 0 0">Pendant ces deux séances, c'est toi le chercheur. Ce guide te dit quoi faire, dans quel ordre, et comment savoir que tu as fini.</p></div><div class="objectif-box"><strong class="title">À la fin des séances 2 et 3, tu auras :</strong><ul class="clean"><li>Un journal de bord d'au moins <strong>15 prompts</strong>, avec les <strong>4 types</strong> de prompts testés et <strong>3 limites</strong> analysées ;</li><li>La version quasi finale de ton <strong>livrable IA</strong> ;</li><li>Ta <strong>cheat sheet</strong> : 5 prompts qui marchent, 3 pièges, 3 astuces ;</li><li>L'<strong>ébauche de ta soutenance</strong>, structurée en 6 temps.</li></ul></div><div class="grid grid-3"><div class="mini-card c-blue"><h4><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" /><path d="M8 10h8" /><path d="M8 18h8" /><path d="M8 22v-6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6" /><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" /></svg></span>Ton kit</h4><ul class="clean"><li>Ta fiche de cadrage validée</li><li>Ton compte sur l'outil choisi</li><li>Le support théorique de la séance 1</li></ul></div><div class="mini-card c-peach"><h4><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" /><path d="M7 3v4a1 1 0 0 0 1 1h7" /></svg></span>Sauvegarde</h4><p class="muted">Tes cases cochées, ton journal et tes générateurs sont gardés <strong>dans ce navigateur</strong>. Exporte ton journal à la fin de chaque séance : si tu changes d'ordinateur, tu repars de ton export.</p></div><div class="mini-card c-mint"><h4><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Validation</h4><p class="muted">Chaque onglet se valide quand toutes ses étapes sont cochées. La barre en haut de page suit ton avancement.</p></div></div><div class="link-card"><span><strong><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m16 6 4 14" /><path d="M12 6v14" /><path d="M8 8v12" /><path d="M4 4v16" /></svg></span>Besoin de revoir une notion ?</strong><br><span class="muted">Familles d'IA, types de prompts, limites, méthode.</span></span><a class="btn btn-ghost" href="../Seance_1/seance-1-explorer-et-cadrer-theorie.html"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Support théorique · Séance 1</a></div></div>
+<div class="card"><div class="section-title"><span class="icon-bg green"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span>Bienvenue en autonomie</div><div class="key-box"><div class="big">Je sais expérimenter, douter et documenter seul.</div><p style="margin:8px 0 0">Pendant ces deux séances, c'est toi le chercheur. Ce guide te dit quoi faire, dans quel ordre, et comment savoir que tu as fini.</p></div><div class="objectif-box"><strong class="title">À la fin des séances 2 et 3, tu auras :</strong><ul class="clean"><li>Un journal de bord d'au moins <strong>15 prompts</strong>, avec les <strong>4 types</strong> de prompts testés et <strong>3 limites</strong> analysées ;</li><li>La version quasi finale de ton <strong>livrable IA</strong> ;</li><li>Ta <strong>cheat sheet</strong> : 5 prompts qui marchent, 3 pièges, 3 astuces ;</li><li>L'<strong>ébauche de ta soutenance</strong>, structurée en 6 temps.</li></ul></div><div class="grid grid-3"><div class="mini-card c-blue"><h4><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" /><path d="M8 10h8" /><path d="M8 18h8" /><path d="M8 22v-6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6" /><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" /></svg></span>Ton kit</h4><ul class="clean"><li>Ta fiche de cadrage validée</li><li>Ton compte sur l'outil choisi</li><li>Le support théorique de la séance 1</li></ul></div><div class="mini-card c-peach"><h4><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" /><path d="M7 3v4a1 1 0 0 0 1 1h7" /></svg></span>Sauvegarde</h4><p class="muted">Tes cases cochées, ton journal et tes générateurs sont gardés <strong>dans ce navigateur</strong>. Exporte ton journal à la fin de chaque séance : si tu changes d'ordinateur, tu repars de ton export.</p></div><div class="mini-card c-mint"><h4><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span>Validation</h4><p class="muted">Chaque onglet se valide quand toutes ses étapes sont cochées. La barre en haut de page suit ton avancement.</p></div></div><div class="link-card"><span><strong><span class="ico ti-blue"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m16 6 4 14" /><path d="M12 6v14" /><path d="M8 8v12" /><path d="M4 4v16" /></svg></span>Besoin de revoir une notion ?</strong><br><span class="muted">Familles d'IA, types de prompts, limites, méthode.</span></span><a class="btn btn-ghost" href="../index.html"><span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15 18-6-6 6-6" /></svg></span> Support théorique · Séance 1</a></div></div>
 <div class="card"><div class="section-title"><span class="icon-bg"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></span>Ta feuille de route</div><div class="table-wrap"><table><tr><th>Séance</th><th>Activité</th><th>Tu as fini quand…</th></tr><tr><td rowspan="5"><strong>Séance 2</strong> <span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span></td><td>Mise en route</td><td>Ton outil fonctionne et ton journal est ouvert</td></tr><tr><td><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2" /><path d="M6.453 15h11.094" /><path d="M8.5 2h7" /></svg></span>Sprint 1 · Premier résultat</td><td>8 entrées et un premier résultat montrable</td></tr><tr><td><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m17 2 4 4-4 4" /><path d="M3 11v-1a4 4 0 0 1 4-4h14" /><path d="m7 22-4-4 4-4" /><path d="M21 13v1a4 4 0 0 1-4 4H3" /></svg></span>Sprint 2 · Varier les techniques</td><td>15 entrées et les 4 types de prompts testés</td></tr><tr><td><span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m11 17 2 2a1 1 0 1 0 3-3" /><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4" /><path d="m21 3 1 11h-2" /><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" /><path d="M3 4h8" /></svg></span>Trinôme</td><td>Suggestions de tes camarades notées</td></tr><tr><td><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 3v12" /><path d="m17 8-5-5-5 5" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></svg></span>Jalon 1</td><td>Journal et meilleure capture déposés</td></tr><tr><td rowspan="4"><strong>Séance 3</strong> <span class="ico ti-mint"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span></td><td><span class="ico ti-rose"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></svg></span>Sprint 3 · Crash-test</td><td>3 limites provoquées et analysées</td></tr><tr><td><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z" /><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /></svg></span>Livrable final</td><td>Version quasi finale, fichiers téléchargés</td></tr><tr><td><span class="ico ti-lilac"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M13 16H8" /><path d="M14 8H8" /><path d="M16 12H8" /><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></svg></span>Cheat sheet</td><td>Cheat sheet générée et testée par un camarade</td></tr><tr><td><span class="ico ti-peach"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 3v12" /><path d="m17 8-5-5-5 5" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></svg></span>Jalon 2</td><td>Tout est déposé, ébauche de soutenance comprise</td></tr></table></div><p class="muted">Les jalons tombent en fin de séance 2 et en fin de séance 3.</p></div>
 <div class="card half"><div class="section-title"><span class="icon-bg red"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><line x1="10" x2="14" y1="2" y2="2" /><line x1="12" x2="15" y1="14" y2="11" /><circle cx="12" cy="14" r="8" /></svg></span>La règle des 15 minutes</div><ol><li>Cherche seul <strong>15 minutes</strong> maximum : reformule, teste autrement, relis le support.</li><li>Demande à ton <strong>trinôme</strong>.</li><li>Pose ta question sur le <strong>canal du module</strong>, avec une capture et le prompt utilisé.</li></ol><p class="muted">Rester bloqué une heure en silence, c'est la seule vraie erreur.</p></div>
 <div class="card half"><div class="section-title"><span class="icon-bg purple"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 3v16a2 2 0 0 0 2 2h16" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg></span>Ce qui est évalué</div><ul class="clean"><li><strong>Journal de bord</strong> · 25 % de la note</li><li><strong>Cheat sheet</strong> · 15 %</li><li><strong>Autonomie et organisation</strong> · 10 % : jalons déposés à l'heure et complets, journal tenu régulièrement</li></ul><div class="nav-bottom"><span></span><button class="btn btn-primary" data-goto="s1">Commencer : Sprint 1 <span class="ico ti-bare"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span></button></div></div>
@@ -657,45 +667,59 @@ $$('[data-explorer]').forEach(box=>{
   show(0);
 });
 
-/* QCM de chapitre */
+/* QCM de chapitre : une question à la fois (choisir, valider, lire l'explication, passer à la suivante) */
 if(D.qcms){
   const qState={}, scores={}, L=['A','B','C','D','E'];
   function renderQCM(ci){
-    const box=$('#qcm'+ci); box.innerHTML='';
     const qs = shuffle(D.qcms[ci]).map(q=>({q:q.q,e:q.e,opts:shuffle(q.o.map((t,i)=>({t,good:i===q.a})))}));
-    qState[ci]={qs};
-    qs.forEach((q,qi)=>{
-      const d=document.createElement('div'); d.className='qcm-q';
-      d.innerHTML='<div class="qt"><span class="q-num">Q'+(qi+1)+'</span>'+esc(q.q)+'</div><div class="qcm-opts" role="radiogroup">'+
-        q.opts.map((o,oi)=>'<button type="button" class="qcm-opt" role="radio" aria-checked="false" data-oi="'+oi+'"><span class="l">'+L[oi]+'</span><span>'+esc(o.t)+'</span></button>').join('')+'</div><div class="expl"></div>';
-      $$('.qcm-opt',d).forEach(b=>b.addEventListener('click',()=>{
-        if(d.classList.contains('checked')) return;
-        $$('.qcm-opt',d).forEach(x=>{x.classList.remove('sel');x.setAttribute('aria-checked','false');});
-        b.classList.add('sel'); b.setAttribute('aria-checked','true'); d.dataset.ans=b.dataset.oi; updQ(ci);
-      }));
-      box.appendChild(d);
-    });
-    $('#qres'+ci).classList.remove('show'); updQ(ci);
+    qState[ci]={qs,i:0,sel:null,checked:false,res:qs.map(()=>null)};
+    $('#qres'+ci).classList.remove('show'); showQ(ci);
   }
-  function updQ(ci){ const rows=$$('#qcm'+ci+' .qcm-q'); setProgress('qfill'+ci,'qtxt'+ci,rows.filter(r=>r.dataset.ans!==undefined).length,rows.length); }
-  function checkQCM(ci, silent){
-    const rows=$$('#qcm'+ci+' .qcm-q');
-    if(!silent && rows.some(r=>r.dataset.ans===undefined)){ toast('Réponds à toutes les questions avant de vérifier.'); return; }
-    let ok=0;
-    rows.forEach((r,qi)=>{
-      const q=qState[ci].qs[qi]; const ans=r.dataset.ans===undefined?-1:+r.dataset.ans;
-      const gi=q.opts.findIndex(o=>o.good); const good=ans===gi; if(good) ok++;
-      r.classList.remove('correct','wrong'); r.classList.add('checked', good?'correct':'wrong');
-      $$('.qcm-opt',r).forEach((b,oi)=>{ b.classList.toggle('good',oi===gi); b.classList.toggle('bad',oi===ans&&!good); });
-      $('.expl',r).innerHTML=(good?I.ok:I.ko+'Bonne réponse : <strong>'+L[gi]+'</strong>. ')+esc(q.e);
-    });
-    $('#qres'+ci).innerHTML='<div class="score">'+ok+' / '+rows.length+'</div><div class="msg">'+scoreMsg(Math.round(ok/rows.length*100))+'</div>';
-    $('#qres'+ci).classList.add('show');
-    if(!silent){ scores[ci]=Math.max(scores[ci]||0,ok); updScores(); markDone('ch'+ci); }
+  function nbDone(ci){ return qState[ci].res.filter(r=>r!==null).length; }
+  function showQ(ci, focus){
+    const S=qState[ci], q=S.qs[S.i], n=S.qs.length, box=$('#qcm'+ci); S.sel=null; S.checked=false;
+    const dots=S.qs.map((_,k)=>'<span class="qdot'+(S.res[k]===true?' ok':S.res[k]===false?' ko':k===S.i?' cur':'')+'"></span>').join('');
+    box.innerHTML='<div class="qcm-q"><div class="qcm-top"><span class="q-num">Question '+(S.i+1)+' / '+n+'</span><span class="qdots" aria-hidden="true">'+dots+'</span></div>'+
+      '<div class="qt" id="qt'+ci+'" tabindex="-1">'+esc(q.q)+'</div>'+
+      '<div class="qcm-opts" role="radiogroup" aria-labelledby="qt'+ci+'">'+
+        q.opts.map((o,oi)=>'<button type="button" class="qcm-opt" role="radio" aria-checked="false" data-oi="'+oi+'"><span class="l">'+L[oi]+'</span><span>'+esc(o.t)+'</span></button>').join('')+'</div>'+
+      '<div class="expl" role="status" aria-live="polite"></div>'+
+      '<div class="qcm-actions"><button type="button" class="btn btn-primary" data-qvalid disabled>Valider ma réponse</button><button type="button" class="btn btn-primary" data-qnext hidden>'+(S.i===n-1?'Voir mon résultat':'Question suivante')+'</button></div></div>';
+    const valid=$('[data-qvalid]',box), next=$('[data-qnext]',box), opts=$$('.qcm-opt',box);
+    opts.forEach(b=>b.addEventListener('click',()=>{
+      if(S.checked) return;
+      opts.forEach(x=>{x.classList.remove('sel');x.setAttribute('aria-checked','false');});
+      b.classList.add('sel'); b.setAttribute('aria-checked','true'); S.sel=+b.dataset.oi; valid.disabled=false;
+    }));
+    valid.addEventListener('click',()=>validateQ(ci));
+    next.addEventListener('click',()=>{ if(S.i<n-1){ S.i++; showQ(ci,true); } else finishQCM(ci); });
+    setProgress('qfill'+ci,'qtxt'+ci,nbDone(ci),n);
+    if(focus){ const calm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; box.scrollIntoView({behavior:calm?'auto':'smooth',block:'nearest'}); $('#qt'+ci).focus({preventScroll:true}); }
+  }
+  function validateQ(ci){
+    const S=qState[ci]; if(S.sel===null||S.checked) return;
+    const card=$('.qcm-q',$('#qcm'+ci)), q=S.qs[S.i], gi=q.opts.findIndex(o=>o.good), good=S.sel===gi;
+    S.checked=true; S.res[S.i]=good;
+    card.classList.remove('peek'); card.classList.add('checked', good?'correct':'wrong');
+    $$('.qcm-opt',card).forEach((b,oi)=>{ b.classList.toggle('good',oi===gi); b.classList.toggle('bad',oi===S.sel&&!good); b.setAttribute('aria-disabled','true'); });
+    $('.expl',card).innerHTML=(good?I.ok:I.ko+'Bonne réponse : <strong>'+L[gi]+'</strong>. ')+esc(q.e);
+    $$('.qdot',card)[S.i].className='qdot '+(good?'ok':'ko');
+    const v=$('[data-qvalid]',card), nx=$('[data-qnext]',card); v.hidden=true; nx.hidden=false; nx.focus({preventScroll:true});
+    setProgress('qfill'+ci,'qtxt'+ci,nbDone(ci),S.qs.length);
+  }
+  function finishQCM(ci){
+    const S=qState[ci], n=S.qs.length, ok=S.res.filter(Boolean).length;
+    const errs=S.qs.map((q,k)=>({q,k})).filter(x=>S.res[x.k]===false);
+    $('#qcm'+ci).innerHTML='<div class="qcm-recap">'+(errs.length ? '<h4>À revoir</h4>'+errs.map(({q,k})=>{ const gi=q.opts.findIndex(o=>o.good);
+      return '<div class="qcm-q wrong checked"><div class="qt"><span class="q-num">Q'+(k+1)+'</span>'+esc(q.q)+'</div><div class="expl">'+I.ko+'Bonne réponse : <strong>'+L[gi]+'. '+esc(q.opts[gi].t)+'</strong>. '+esc(q.e)+'</div></div>'; }).join('') : '<p>Sans faute : toutes les réponses sont justes.</p>')+'</div>';
+    const res=$('#qres'+ci); res.innerHTML='<div class="score">'+ok+' / '+n+'</div><div class="msg">'+scoreMsg(Math.round(ok/n*100))+'</div>'; res.classList.add('show');
+    scores[ci]=Math.max(scores[ci]||0,ok); updScores(); markDone('ch'+ci);
   }
   function revealQCM(ci){
-    $$('#qcm'+ci+' .qcm-q').forEach((r,qi)=>{ const gi=qState[ci].qs[qi].opts.findIndex(o=>o.good); r.dataset.ans=gi; $$('.qcm-opt',r).forEach((b,oi)=>b.classList.toggle('sel',oi===gi)); });
-    updQ(ci); checkQCM(ci,true);
+    const S=qState[ci], card=$('.qcm-q',$('#qcm'+ci)); if(!card||S.checked) return;
+    const q=S.qs[S.i], gi=q.opts.findIndex(o=>o.good);
+    card.classList.add('peek'); $$('.qcm-opt',card).forEach((b,oi)=>b.classList.toggle('good',oi===gi));
+    $('.expl',card).innerHTML='Bonne réponse : <strong>'+L[gi]+'</strong>. '+esc(q.e);
   }
   function updScores(){
     let tot=0,max=0;
@@ -703,9 +727,8 @@ if(D.qcms){
     const st=$('#scoreTotal'); if(st) st.textContent=tot+' / '+max;
   }
   D.qcms.forEach((_,ci)=>renderQCM(ci));
-  $$('[data-qcheck]').forEach(b=>b.addEventListener('click',()=>checkQCM(+b.dataset.qcheck)));
   $$('[data-qreveal]').forEach(b=>b.addEventListener('click',()=>revealQCM(+b.dataset.qreveal)));
-  $$('[data-qreset]').forEach(b=>b.addEventListener('click',()=>renderQCM(+b.dataset.qreset)));
+  $$('[data-qreset]').forEach(b=>b.addEventListener('click',()=>{ renderQCM(+b.dataset.qreset); const box=$('#qcm'+b.dataset.qreset); const t=$('.qt',box); if(t) t.focus({preventScroll:true}); }));
 }
 
 /* Cas 1 — correspondance */
